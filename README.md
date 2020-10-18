@@ -1,7 +1,10 @@
 # DigiAlpha
 Optimized 32-Bit Full Adder, CEC-SAT Verifier &amp; 2-SAT Solver
 
-This is a SUTD 2020 ISTD Term 4 2D Project.
+This is a SUTD 2020 ISTD Term 4 2D Project, comprised of these courses:
+- 50.001 Introduction to Information Systems & Programming
+- 50.002 Computation Structures
+- 50.004 Introduction to Algorithms
 
 Group 11 Team Members:
 
