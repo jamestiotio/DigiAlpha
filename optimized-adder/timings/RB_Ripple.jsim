@@ -1,0 +1,83 @@
+// RAGUL BALAJI 2020
+// SUTD 50.002 Computation Structures 2D WEEK!
+
+.include "../nominal.jsim"
+.include "../stdcell.jsim" 
+.include "2dcheckoff_100ns.jsim" // 0 points
+//.include "2dcheckoff_6ns.jsim" // 1 points
+//.include "2dcheckoff_4ns.jsim" // 3 points
+//.include "2dcheckoff_3ns.jsim" // 6 points
+
+.subckt bitbond a b
+.connect a b
+.ends
+
+//NAND2 only and3
+.subckt f4st_and3 a b c z // TPD 0.07ns down from 0.15ns
+Xnabc a b c iz nand3
+Xzout iz z inverter
+.ends
+
+//NAND2 only or2
+.subckt f4st_or2 a b z // TPD 0.06ns down from 0.15ns
+Xna a a aa nand2
+Xnb b b bb nand2
+Xnz aa bb z nand2
+.ends
+
+//NAND2 only or4
+.subckt f4st_or4 a b c d z // TPD 0.12ns down from 0.29ns
+Xna a b ab f4st_or2
+Xnb c d cd f4st_or2
+Xnz ab cd z f4st_or2
+.ends
+
+//NAND2 only xor2
+.subckt f4st_xor2 a b z // TPD 0.09ns down from 0.14ns
+Xnand1  a   b   i1   nand2
+Xnand2A a   i1  i2a  nand2
+Xnand2B b   i1  i2b  nand2
+Xnand3  i2a i2b z   nand2
+.ends
+
+// NAND2 only FULL ADDER
+// https://www.geeksforgeeks.org/wp-content/uploads/nand-2.png
+.subckt FA a b ci s co
+Xnand1  a   b   i1   nand2
+Xnand2A a   i1  i2a  nand2
+Xnand2B b   i1  i2b  nand2
+Xnand3  i2a i2b i3   nand2
+
+Xnand4  ci  i3  i4   nand2
+Xnand5A i3  i4  i5a  nand2
+Xnand5B ci  i4  i5b  nand2
+Xnand6A i5a i5b s    nand2  // SUM OUT!
+
+Xnand6B i1  i4  co   nand2  // CARRY OUT!
+.ends
+
+// ADD / SUB
+.subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
+// XOR invert
+XxorB B[31:0] op0#32 xb[31:0] f4st_xor2
+
+// Full adders
+Xfabit0 A[0] xb[0] op0 S[0] CO[0] FA
+Xfabits A[31:1] xb[31:1] CO[30:0] S[31:1] CO[31:1] FA
+
+// Zero Bit - "Big NOR"
+Xors1 S[7:0] S[15:8] S[23:16] S[31:24] toors2[7:0] f4st_or4
+Xors2 toors2[1:0] toors2[3:2] toors2[5:4] toors2[7:6] toors3[1:0] f4st_or4
+Xors3 toors3[0] toors3[1] z nor2 
+
+// Overflow Bit
+XnotA31 A[31] notA31 inverter
+XnotXB31 xb[31] notXB31 inverter
+XnotS31 S[31] notS31 inverter
+Xflow1a A[31] xb[31] notS31 flow1a f4st_and3
+Xflow1b notA31 notXB31 S[31] flow1b f4st_and3
+Xflowout flow1a flow1b v f4st_or2
+
+// Negative Bit
+Xnegbit S[31] n bitbond
+.ends
