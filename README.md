@@ -2,9 +2,9 @@
 Optimized 32-Bit Full Adder, CEC-SAT Verifier &amp; 2-SAT Solver
 
 This is a SUTD 2020 ISTD Term 4 2D Project, comprised of these courses:
-- 50.001 Introduction to Information Systems & Programming
-- 50.002 Computation Structures
-- 50.004 Introduction to Algorithms
+- 50.001 Introduction to Information Systems & Programming (`cec-verifier`)
+- 50.002 Computation Structures (`optimized-adder`)
+- 50.004 Introduction to Algorithms (`sat-solver`)
 
 Group 11 Team Members:
 

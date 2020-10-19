@@ -1,0 +1,26 @@
+c This is a CNF SAT formula in the DIMACS CNF format,
+c produced with the bc2cnf translator by Tommi Junttila;
+c see http://users.ics.aalto.fi/tjunttil/circuits/index.html
+c Z <-> 1
+c Y2 <-> 2
+c Y1 <-> 5
+c B <-> 7
+c A <-> 8
+p cnf 8 17
+1 5 -2 0
+1 -5 2 0
+-1 5 2 0
+-1 -5 -2 0
+1 0
+2 -3 0
+2 -4 0
+-2 4 3 0
+3 7 0
+-3 -7 0
+4 8 0
+-4 -8 0
+5 6 0
+-5 -6 0
+-6 7 0
+-6 8 0
+6 -8 -7 0

@@ -1,0 +1,5 @@
+BC1.1
+Y1:=NOT(AND(A,B));
+Y2:=OR(NOT(A),NOT(B));
+Z:=ODD(Y1,Y2);
+ASSIGN Z;
