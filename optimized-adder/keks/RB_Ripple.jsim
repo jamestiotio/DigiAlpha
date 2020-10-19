@@ -3,37 +3,37 @@
 
 .include "../nominal.jsim"
 .include "../stdcell.jsim" 
-.include "2dcheckoff_100ns.jsim" // 0 points
-//.include "2dcheckoff_6ns.jsim" // 1 points
-//.include "2dcheckoff_4ns.jsim" // 3 points
-//.include "2dcheckoff_3ns.jsim" // 6 points
+//.include "../timings/2dcheckoff_100ns.jsim" // 0 points
+.include "../timings/2dcheckoff_6ns.jsim" // 1 points
+//.include "../timings/2dcheckoff_4ns.jsim" // 3 points
+//.include "../timings/2dcheckoff_3ns.jsim" // 6 points
 
 .subckt bitbond a b
 .connect a b
 .ends
 
-//NAND2 only and3
-.subckt f4st_and3 a b c z // TPD 0.07ns down from 0.15ns
+//NAND2 only and3 TPD 0.07ns down from 0.15ns
+.subckt f4st_and3 a b c z 
 Xnabc a b c iz nand3
 Xzout iz z inverter
 .ends
 
-//NAND2 only or2
-.subckt f4st_or2 a b z // TPD 0.06ns down from 0.15ns
+//NAND2 only or2 TPD 0.06ns down from 0.15ns
+.subckt f4st_or2 a b z
 Xna a a aa nand2
 Xnb b b bb nand2
 Xnz aa bb z nand2
 .ends
 
-//NAND2 only or4
-.subckt f4st_or4 a b c d z // TPD 0.12ns down from 0.29ns
+//NAND2 only or4 TPD 0.12ns down from 0.29ns
+.subckt f4st_or4 a b c d z
 Xna a b ab f4st_or2
 Xnb c d cd f4st_or2
 Xnz ab cd z f4st_or2
 .ends
 
-//NAND2 only xor2
-.subckt f4st_xor2 a b z // TPD 0.09ns down from 0.14ns
+//NAND2 only xor2 TPD 0.09ns down from 0.14ns
+.subckt f4st_xor2 a b z
 Xnand1  a   b   i1   nand2
 Xnand2A a   i1  i2a  nand2
 Xnand2B b   i1  i2b  nand2
