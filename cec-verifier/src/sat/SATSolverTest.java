@@ -35,22 +35,8 @@ public class SATSolverTest {
     public static void main(String args[]) throws IOException {
         List<String> fileContents = readFile("/Users/shuyijia/AndroidStudioProjects/MyApp001/code2d/src/main/java/sampleCNF/s8Sat.cnf");
         Formula f = parse(fileContents);
-        SATSolver.solve(f);
-
-//        ImList<Clause> cls = f.getClauses();
-//        int cSize = Integer.MAX_VALUE;
-//        Clause cSmallest = new Clause();
-//        for (Clause c : cls){
-//            if (c.size() < cSize){
-//                cSize = c.size();
-//                cSmallest = c;
-//            }
-//        }
-//        System.out.println(cSmallest);
-//        Environment e = new Environment();
-//        Literal l = cSmallest.chooseLiteral();
-//        Environment newE = e.putTrue(l.getVariable());
-//        System.out.println(newE);
+        System.out.println(SATSolverVP.solve(f));
+        System.out.println(SATSolver.solve(f));
 
     }
 

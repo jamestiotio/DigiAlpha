@@ -61,9 +61,8 @@ public class SATSolver {
         }
         Literal l = cSmallest.chooseLiteral();
         Environment newEnv = env.putTrue(l.getVariable());
-        System.out.println(newEnv);
-        solve(substitute(clauses,l), newEnv);
-        return null;
+        newEnv = solve(substitute(clauses,l), newEnv);
+        return newEnv;
     }
 
     /**
