@@ -10,13 +10,23 @@
 //   Xid a b z f4st_and2
 //   Xid a b c z f4st_and3
 //   Xid a b c d z f4st_and4
+//   Xid a b c d e z f4st_and5
+//   Xid a b c d e f z f4st_and6
+//   Xid a b c d e f g z f4st_and7
+//   Xid a b c d e f g h z f4st_and8
+//   Xid a b c d e f g h i z f4st_and9
 // OR GATES
 //   Xid a b z f4st_or2
 //   Xid a b c z f4st_or3
 //   Xid a b c d z f4st_or4
-// XOR GATES
+//   Xid a b c d e z f4st_or5
+//   Xid a b c d e f z f4st_or6
+//   Xid a b c d e f g z f4st_or7
+//   Xid a b c d e f g h z f4st_or8
+//   Xid a b c d e f g h i z f4st_or9
+// MISC GATES
 //   Xid a b z f4st_xor2
-
+//   Xid a z f4st_buffer
 
 //NAND2 only and2 TPD 0.05ns down from 0.12ns
 .subckt f4st_and2 a b z 
@@ -34,6 +44,41 @@ Xzout iz z inverter
 .subckt f4st_and4 a b c d z
 Xnabcd a b c d iz nand4
 Xzout iz z inverter
+.ends
+
+//NAND only and5 TPD 0.12ns
+.subckt f4st_and5 a b c d e z
+Xand0 a b c iz0 f4st_and3
+Xand1 d e iz1 f4st_and2
+Xzout iz0 iz1 z f4st_and2
+.ends
+
+//NAND only and6 TPD 0.12ns
+.subckt f4st_and6 a b c d e f z
+Xand0 a b c iz0 f4st_and3
+Xand1 d e f iz1 f4st_and3
+Xzout iz0 iz1 z f4st_and2
+.ends
+
+//NAND only and7 TPD 0.14ns
+.subckt f4st_and7 a b c d e f g z
+Xand0 a b c d iz0 f4st_and4
+Xand1 e f g iz1 f4st_and3
+Xzout iz0 iz1 z f4st_and2
+.ends
+
+//NAND only and8 TPD 0.14ns
+.subckt f4st_and8 a b c d e f g h z
+Xand0 a b c d iz0 f4st_and4
+Xand1 e f g h iz1 f4st_and4
+Xzout iz0 iz1 z f4st_and2
+.ends
+
+//NAND only and9 TPD 0.17ns
+.subckt f4st_and9 a b c d e f g h i z
+Xand0 a b c d e iz0 f4st_and5
+Xand1 f g h i iz1 f4st_and4
+Xzout iz0 iz1 z f4st_and2
 .ends
 
 //NAND2 only or2 TPD 0.06ns down from 0.15ns
@@ -56,10 +101,51 @@ Xnb c d cd f4st_or2
 Xnz ab cd z f4st_or2
 .ends
 
+//NAND only or5 TPD 0.16ns
+.subckt f4st_or5 a b c d e z
+Xor0 a b c iz0 f4st_or3
+Xor1 d e iz1 f4st_or2
+Xzout iz0 iz1 z f4st_or2
+.ends
+
+//NAND only or6 TPD 0.16ns
+.subckt f4st_or6 a b c d e f z
+Xor0 a b c iz0 f4st_or3
+Xor1 d e f iz1 f4st_or3
+Xzout iz0 iz1 z f4st_or2
+.ends
+
+//NAND only or7 TPD 0.18ns
+.subckt f4st_or7 a b c d e f g z
+Xor0 a b c d iz0 f4st_or4
+Xor1 e f g iz1 f4st_or3
+Xzout iz0 iz1 z f4st_or2
+.ends
+
+//NAND only or8 TPD 0.18ns
+.subckt f4st_or8 a b c d e f g h z
+Xor0 a b c d iz0 f4st_or4
+Xor1 e f g h iz1 f4st_or4
+Xzout iz0 iz1 z f4st_or2
+.ends
+
+//NAND only or9 TPD 0.22ns
+.subckt f4st_or9 a b c d e f g h i z
+Xor0 a b c d e iz0 f4st_or5
+Xor1 f g h i iz1 f4st_or4
+Xzout iz0 iz1 z f4st_or2
+.ends
+
 //NAND2 only xor2 TPD 0.09ns down from 0.14ns
 .subckt f4st_xor2 a b z
 Xnand1  a   b   i1   nand2
 Xnand2A a   i1  i2a  nand2
 Xnand2B b   i1  i2b  nand2
 Xnand3  i2a i2b z   nand2
+.ends
+
+//INV only buffer TPD 0.04ns down from 0.08ns
+.subckt f4st_buffer a z
+Xi  a ia inverter
+Xii ia z inverter
 .ends
