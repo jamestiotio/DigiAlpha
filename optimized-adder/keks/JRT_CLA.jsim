@@ -1,0 +1,128 @@
+* Carry-Lookahead 32-Bit Adder
+
+.include "../nominal.jsim"
+.include "../stdcell.jsim"
+.include "../timings/2dcheckoff_6ns.jsim"
+
+* Optimized 2-input XOR gate
+.subckt f4st_xor2 a b z
+Xnand1 a b i1 nand2
+Xnand2A a i1 i2a nand2
+Xnand2B b i1 i2b nand2
+Xnand3 i2a i2b z nand2
+.ends
+
+* Optimized 2-input AND gate
+.subckt f4st_and2 a b z
+Xnand0 a b iz nand2
+Xzout iz z inverter
+.ends
+
+* Optimized 3-input AND gate
+.subckt f4st_and3 a b c z
+Xnand0 a b c iz nand3
+Xzout iz z inverter
+.ends
+
+* Optimized 4-input AND gate
+.subckt f4st_and4 a b c d z
+Xnand0 a b c d iz nand4
+Xzout iz z inverter
+.ends
+
+* Optimized 5-input AND gate
+.subckt f4st_and5 a b c d e z
+Xand0 a b c d iz f4st_and4
+Xzout iz e z f4st_and2
+.ends
+
+* Optimized 2-input OR gate
+.subckt f4st_or2 a b z
+Xnor0 a b iz nor2
+Xzout iz z inverter
+.ends
+
+* Optimized 3-input OR gate
+.subckt f4st_or3 a b c z
+Xnor0 a b c iz nor3
+Xzout iz z inverter
+.ends
+
+* Optimized 4-input OR gate
+.subckt f4st_or4 a b c d z
+Xnor0 a b c d iz nor4
+Xzout iz z inverter
+.ends
+
+* Optimized 5-input OR gate
+.subckt f4st_or5 a b c d e z
+Xor0 a b c d iz f4st_or4
+Xzout iz e z f4st_or2
+.ends
+
+* Form propagate bit and generate bit
+* We used OR instead of XOR for p-bit since it is faster
+.subckt pg a b p g
+Xpout a b p f4st_or2
+Xgout a b g f4st_and2
+.ends
+
+.subckt equality s[31:0] z
+Xz0 s[7:0] s[15:8] s[23:16] s[31:24] r[7:0] nor4
+Xz1 r[1:0] r[3:2] r[5:4] r[7:6] out[1:0] nand4
+Xz2 out[0] out[1] z nor2
+.ends
+
+.subckt overflow a b s v
+XAinvert a a_inv inverter
+XBinvert b b_inv inverter
+XSinvert s s_inv inverter
+Xand0 a b s_inv and0_out f4st_and3
+Xand1 a_inv b_inv s and1_out f4st_and3
+Xv and0_out and1_out v f4st_or2
+.ends
+
+* 4-Bit CLA
+.subckt CLA4 a[3:0] b[3:0] cin s[3:0] cout
+* Prepare Bits
+Xpg0 a[3:0] b[3:0] p[3:0] g[3:0] pg
+Xand0 p[0] cin and0_out f4st_and2
+Xand1 p[0] p[1] cin and1_out f4st_and3
+Xand2 p[1] g[0] and2_out f4st_and2
+Xand3 p[0] p[1] p[2] cin and3_out f4st_and4
+Xand4 p[1] p[2] g[0] and4_out f4st_and3
+Xand5 p[2] g[1] and5_out f4st_and2
+Xand6 p[0] p[1] p[2] p[3] cin and6_out f4st_and5
+Xand7 p[1] p[2] p[3] g[0] and7_out f4st_and4
+Xand8 p[2] p[3] g[1] and8_out f4st_and3
+Xand9 p[3] g[2] and9_out f4st_and2
+
+* Result Bits
+Xc0 g[0] and0_out c[0] f4st_or2
+Xc1 g[1] and1_out and2_out c[1] f4st_or3
+Xc2 g[2] and3_out and4_out and5_out c[2] f4st_or4
+
+* Output Bits
+Xcout g[3] and6_out and7_out and8_out and9_out cout f4st_or5
+Xs0 cin p[0] s[0] f4st_xor2
+Xsbits c[2:0] p[3:1] s[3:1] f4st_xor2
+.ends
+
+* Final 32-Bit Adder
+.subckt adder32 ALUFN[0] A[31:0] B[31:0] S[31:0] Z V N
+* Main Adder
+Xxor0 B[31:0] ALUFN[0]#32 XB[31:0] f4st_xor2
+XCLA0 A[3:0] XB[3:0] ALUFN[0] S[3:0] C[3] CLA4
+XCLA1 A[7:4] XB[7:4] C[3] S[7:4] C[7] CLA4
+XCLA2 A[11:8] XB[11:8] C[7] S[11:8] C[11] CLA4
+XCLA3 A[15:12] XB[15:12] C[11] S[15:12] C[15] CLA4
+XCLA4 A[19:16] XB[19:16] C[15] S[19:16] C[19] CLA4
+XCLA5 A[23:20] XB[23:20] C[19] S[23:20] C[23] CLA4
+XCLA6 A[27:24] XB[27:24] C[23] S[27:24] C[27] CLA4
+XCLA7 A[31:28] XB[31:28] C[27] S[31:28] C[31] CLA4
+
+* Additional ZVN Outputs
+Xeq S[31:0] Z equality
+Xovf A[31] XB[31] S[31] V overflow
+.connect S[31] N
+.ends
