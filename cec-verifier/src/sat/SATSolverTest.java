@@ -33,11 +33,9 @@ public class SATSolverTest {
 	
 	// TODO: add the main method that reads the .cnf file and calls SATSolver.solve to determine the satisfiability
     public static void main(String args[]) throws IOException {
-        List<String> fileContents = readFile("/Users/shuyijia/AndroidStudioProjects/MyApp001/code2d/src/main/java/sampleCNF/s8Sat.cnf");
+        List<String> fileContents = readFile("/Users/shuyijia/AndroidStudioProjects/MyApp001/code2d/src/main/java/sampleCNF/largeSat.cnf");
         Formula f = parse(fileContents);
-        System.out.println(SATSolverVP.solve(f));
         System.out.println(SATSolver.solve(f));
-
     }
 
     public static List<String> readFile (String fName) throws IOException {

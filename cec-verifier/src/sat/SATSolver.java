@@ -6,6 +6,7 @@ import sat.env.Environment;
 import sat.formula.Clause;
 import sat.formula.Formula;
 import sat.formula.Literal;
+import sat.formula.PosLiteral;
 
 /**
  * A simple DPLL SAT solver. See http://en.wikipedia.org/wiki/DPLL_algorithm
@@ -43,26 +44,45 @@ public class SATSolver {
      *         or null if no such environment exists.
      */
     private static Environment solve(ImList<Clause> clauses, Environment env) {
+        // Base case, if clauses is empty, it is satisfiable
         if (clauses.size() == 0) {
             return env;
         }
+        // Initialised to find the smallest clause
         int cSize = Integer.MAX_VALUE;
         Clause cSmallest = new Clause();
+
         for (Clause c : clauses){
             if (c.isEmpty()) {
                 return null;
-            }else if (c.isUnit()){
-                cSmallest = c;
-                break;
             }else if (c.size() < cSize){
                 cSize = c.size();
                 cSmallest = c;
             }
         }
+        // Get a literal and simplify the formula (clauses)
         Literal l = cSmallest.chooseLiteral();
-        Environment newEnv = env.putTrue(l.getVariable());
-        newEnv = solve(substitute(clauses,l), newEnv);
-        return newEnv;
+
+        if (cSmallest.isUnit()){
+            env = env.put(l.getVariable(), checkVar(l));
+            return solve(substitute(clauses,l), env);
+        }else{
+            Environment newEnv = env.put(l.getVariable(), checkVar(l));
+            newEnv = solve(substitute(clauses, l), newEnv);
+            if (newEnv != null){
+                return newEnv;
+            }else{
+                newEnv = newEnv.put(l.getNegation().getVariable(), checkVar(l.getNegation()));
+                return solve(substitute(clauses, l.getNegation()), newEnv);
+            }
+        }
+    }
+
+    private static Bool checkVar(Literal l){
+        if (l instanceof PosLiteral){
+            return Bool.TRUE;
+        }
+        return Bool.FALSE;
     }
 
     /**
