@@ -24,9 +24,9 @@
 //   Xid a b c d e f g z f4st_or7
 //   Xid a b c d e f g h z f4st_or8
 //   Xid a b c d e f g h i z f4st_or9
-// XOR GATES
+// MISC GATES
 //   Xid a b z f4st_xor2
-// BUFFER
+//   Xid a z f4st_buffer
 
 //NAND2 only and2 TPD 0.05ns down from 0.12ns
 .subckt f4st_and2 a b z 
@@ -144,8 +144,8 @@ Xnand2B b   i1  i2b  nand2
 Xnand3  i2a i2b z   nand2
 .ends
 
-//BUFFER
+//INV only buffer TPD 0.04ns down from 0.08ns
 .subckt f4st_buffer a z
-Xinv0 a iz inverter
-Xinv1 iz z inverter
+Xi  a ia inverter
+Xii ia z inverter
 .ends
