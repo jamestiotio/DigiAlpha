@@ -1,6 +1,7 @@
 package sat;
 
 import immutable.ImList;
+import sat.env.Bool;
 import sat.env.Environment;
 import sat.formula.Clause;
 import sat.formula.Formula;
@@ -20,8 +21,13 @@ public class SATSolver {
      *         null if no such environment exists.
      */
     public static Environment solve(Formula formula) {
-        // TODO: implement this.
-        throw new RuntimeException("not yet implemented.");
+        // Check if empty
+        Environment e = new Environment();
+        if (formula.getSize() == 0){
+            return null;
+        }else{
+            return solve(formula.getClauses(), e);
+        }
     }
 
     /**
@@ -37,8 +43,26 @@ public class SATSolver {
      *         or null if no such environment exists.
      */
     private static Environment solve(ImList<Clause> clauses, Environment env) {
-        // TODO: implement this.
-        throw new RuntimeException("not yet implemented.");
+        if (clauses.size() == 0) {
+            return env;
+        }
+        int cSize = Integer.MAX_VALUE;
+        Clause cSmallest = new Clause();
+        for (Clause c : clauses){
+            if (c.isEmpty()) {
+                return null;
+            }else if (c.isUnit()){
+                cSmallest = c;
+                break;
+            }else if (c.size() < cSize){
+                cSize = c.size();
+                cSmallest = c;
+            }
+        }
+        Literal l = cSmallest.chooseLiteral();
+        Environment newEnv = env.putTrue(l.getVariable());
+        newEnv = solve(substitute(clauses,l), newEnv);
+        return newEnv;
     }
 
     /**
@@ -53,8 +77,16 @@ public class SATSolver {
      */
     private static ImList<Clause> substitute(ImList<Clause> clauses,
             Literal l) {
-        // TODO: implement this.
-        throw new RuntimeException("not yet implemented.");
+        for (Clause c : clauses){
+            if (c.contains(l)){
+                clauses = clauses.remove(c);
+            }else if (c.contains(l.getNegation())){
+                Clause new_c = c.reduce(l);
+                clauses = clauses.remove(c);
+                clauses = clauses.add(new_c);
+            }
+        }
+        return clauses;
     }
 
 }
