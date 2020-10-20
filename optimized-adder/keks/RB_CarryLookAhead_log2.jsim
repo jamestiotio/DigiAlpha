@@ -1,0 +1,140 @@
+// RAGUL BALAJI 2020
+// SUTD 50.002 Computation Structures 2D WEEK!
+
+.include "../nominal.jsim"
+.include "../stdcell.jsim" 
+//.include "../timings/2dcheckoff_100ns.jsim" // 0 points
+//.include "../timings/2dcheckoff_6ns.jsim" // 1 points
+.include "../timings/2dcheckoff_4ns.jsim" // 3 points
+//.include "../timings/2dcheckoff_3ns.jsim" // 6 points
+
+// 32 BIT CARRY LOOKAHEAD ADDER
+.subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
+
+// XOR invert
+XxorB B[31:0] op0#32 xb[31:0] f4st_xor2
+
+// PropGenSum X Blocks - 32 of them
+Xpgs A[31:0] xb[31:0] C[31:0] S[31:0] G[31:0] P[31:0] blockX
+
+// CLA Y Tree
+// Layer 0 -- 16 blocks
+// for i in range(0,32,2): print("Xc0%.2da G[%d] P[%d] G[%d] P[%d] cl0b[%d] C[%d] C[%d] g0hl[%d] p0hl[%d] blockY"%(i/2, i+1, i+1, i, i, i/2, i, i+1, i/2, i/2))
+Xc000a G[1] P[1] G[0] P[0] cl0b[0] C[0] C[1] g0hl[0] p0hl[0] blockY
+Xc001a G[3] P[3] G[2] P[2] cl0b[1] C[2] C[3] g0hl[1] p0hl[1] blockY
+Xc002a G[5] P[5] G[4] P[4] cl0b[2] C[4] C[5] g0hl[2] p0hl[2] blockY
+Xc003a G[7] P[7] G[6] P[6] cl0b[3] C[6] C[7] g0hl[3] p0hl[3] blockY
+Xc004a G[9] P[9] G[8] P[8] cl0b[4] C[8] C[9] g0hl[4] p0hl[4] blockY
+Xc005a G[11] P[11] G[10] P[10] cl0b[5] C[10] C[11] g0hl[5] p0hl[5] blockY
+Xc006a G[13] P[13] G[12] P[12] cl0b[6] C[12] C[13] g0hl[6] p0hl[6] blockY
+Xc007a G[15] P[15] G[14] P[14] cl0b[7] C[14] C[15] g0hl[7] p0hl[7] blockY
+Xc008a G[17] P[17] G[16] P[16] cl0b[8] C[16] C[17] g0hl[8] p0hl[8] blockY
+Xc009a G[19] P[19] G[18] P[18] cl0b[9] C[18] C[19] g0hl[9] p0hl[9] blockY
+Xc010a G[21] P[21] G[20] P[20] cl0b[10] C[20] C[21] g0hl[10] p0hl[10] blockY
+Xc011a G[23] P[23] G[22] P[22] cl0b[11] C[22] C[23] g0hl[11] p0hl[11] blockY
+Xc012a G[25] P[25] G[24] P[24] cl0b[12] C[24] C[25] g0hl[12] p0hl[12] blockY
+Xc013a G[27] P[27] G[26] P[26] cl0b[13] C[26] C[27] g0hl[13] p0hl[13] blockY
+Xc014a G[29] P[29] G[28] P[28] cl0b[14] C[28] C[29] g0hl[14] p0hl[14] blockY
+Xc015a G[31] P[31] G[30] P[30] cl0b[15] C[30] C[31] g0hl[15] p0hl[15] blockY
+
+// Layer 1 -- 8 blocks
+// for i in range(0,16,2): print("Xc1%.2da g0hl[%d] p0hl[%d] g0hl[%d] p0hl[%d] cl1b[%d] cl0b[%d] cl0b[%d] g1hl[%d] p1hl[%d] blockY"%(i/2, i+1, i+1, i, i, i/2, i, i+1, i/2, i/2))
+Xc100a g0hl[1] p0hl[1] g0hl[0] p0hl[0] cl1b[0] cl0b[0] cl0b[1] g1hl[0] p1hl[0] blockY
+Xc101a g0hl[3] p0hl[3] g0hl[2] p0hl[2] cl1b[1] cl0b[2] cl0b[3] g1hl[1] p1hl[1] blockY
+Xc102a g0hl[5] p0hl[5] g0hl[4] p0hl[4] cl1b[2] cl0b[4] cl0b[5] g1hl[2] p1hl[2] blockY
+Xc103a g0hl[7] p0hl[7] g0hl[6] p0hl[6] cl1b[3] cl0b[6] cl0b[7] g1hl[3] p1hl[3] blockY
+Xc104a g0hl[9] p0hl[9] g0hl[8] p0hl[8] cl1b[4] cl0b[8] cl0b[9] g1hl[4] p1hl[4] blockY
+Xc105a g0hl[11] p0hl[11] g0hl[10] p0hl[10] cl1b[5] cl0b[10] cl0b[11] g1hl[5] p1hl[5] blockY
+Xc106a g0hl[13] p0hl[13] g0hl[12] p0hl[12] cl1b[6] cl0b[12] cl0b[13] g1hl[6] p1hl[6] blockY
+Xc107a g0hl[15] p0hl[15] g0hl[14] p0hl[14] cl1b[7] cl0b[14] cl0b[15] g1hl[7] p1hl[7] blockY
+
+// Layer 2 -- 4 blocks
+// for i in range(0,8,2): print("Xc2%.2da g1hl[%d] p1hl[%d] g1hl[%d] p1hl[%d] cl2b[%d] cl1b[%d] cl1b[%d] g2hl[%d] p2hl[%d] blockY"%(i/2, i+1, i+1, i, i, i/2, i, i+1, i/2, i/2))
+Xc200a g1hl[1] p1hl[1] g1hl[0] p1hl[0] cl2b[0] cl1b[0] cl1b[1] g2hl[0] p2hl[0] blockY
+Xc201a g1hl[3] p1hl[3] g1hl[2] p1hl[2] cl2b[1] cl1b[2] cl1b[3] g2hl[1] p2hl[1] blockY
+Xc202a g1hl[5] p1hl[5] g1hl[4] p1hl[4] cl2b[2] cl1b[4] cl1b[5] g2hl[2] p2hl[2] blockY
+Xc203a g1hl[7] p1hl[7] g1hl[6] p1hl[6] cl2b[3] cl1b[6] cl1b[7] g2hl[3] p2hl[3] blockY
+
+// Layer 3 -- 2 blocks
+// for i in range(0,4,2): print("Xc3%.2da g2hl[%d] p2hl[%d] g2hl[%d] p2hl[%d] cl3b[%d] cl2b[%d] cl2b[%d] g3hl[%d] p3hl[%d] blockY"%(i/2, i+1, i+1, i, i, i/2, i, i+1, i/2, i/2))
+Xc300a g2hl[1] p2hl[1] g2hl[0] p2hl[0] cl3b[0] cl2b[0] cl2b[1] g3hl[0] p3hl[0] blockY
+Xc301a g2hl[3] p2hl[3] g2hl[2] p2hl[2] cl3b[1] cl2b[2] cl2b[3] g3hl[1] p3hl[1] blockY
+
+// Layer 4 -- 1 block
+Xc400a g3hl[1] p3hl[1] g3hl[0] p3hl[0] op0 cl3b[0] cl3b[1] usedg usedp blockY
+
+// Zero Bit - "Big NOR"
+Xors1 S[7:0] S[15:8] S[23:16] S[31:24] toors2[7:0] f4st_or4
+Xors2 toors2[1:0] toors2[3:2] toors2[5:4] toors2[7:6] toors3[1:0] f4st_or4
+Xors3 toors3[0] toors3[1] z nor2 
+
+// Overflow Bit
+XnotA31 A[31] notA31 inverter
+XnotXB31 xb[31] notXB31 inverter
+XnotS31 S[31] notS31 inverter
+Xflow1a A[31] xb[31] notS31 flow1a f4st_and3
+Xflow1b notA31 notXB31 S[31] flow1b f4st_and3
+Xflowout flow1a flow1b v f4st_or2
+
+// Negative Bit
+Xnegbit S[31] n bitbond
+.ends
+
+
+// ref to https://d2vlcm61l7u1fs.cloudfront.net/media%2Fd75%2Fd75c2b67-ae84-42fe-bb87-6560d8e771fc%2FphpnsMIFh.png
+.subckt blockX a b c s g p 
+Xgen  a b g f4st_and2
+Xprop a b p f4st_or2
+Xaxrb a b i f4st_xor2
+Xsumo i c s f4st_xor2
+.ends
+
+// ref to https://d2vlcm61l7u1fs.cloudfront.net/media%2Fd75%2Fd75c2b67-ae84-42fe-bb87-6560d8e771fc%2FphpnsMIFh.png
+.subckt blockY gh ph gl pl clb cll ch ghl phl
+.connect clb cll
+Xpout ph  pl phl f4st_and2
+Xatr  ph  gl atr f4st_and2
+Xaml  clb pl aml f4st_and2
+Xghlo atr gh ghl f4st_or2
+Xcho  aml gl ch  f4st_or2
+.ends
+
+.subckt bitbond a b
+.connect a b
+.ends
+
+// -------------------------------- FAST PARTS BELOW -------------------------------- //
+
+//NAND2 only and2 TPD 0.05ns down from 0.12ns
+.subckt f4st_and2 a b z 
+Xnab a b iz nand2
+Xiiz iz z inverter
+.ends
+
+//NAND3 only and3 TPD 0.07ns down from 0.15ns
+.subckt f4st_and3 a b c z 
+Xnabc a b c iz nand3
+Xzout iz z inverter
+.ends
+
+//NAND2 only or2 TPD 0.06ns down from 0.15ns
+.subckt f4st_or2 a b z
+Xna a a aa nand2
+Xnb b b bb nand2
+Xnz aa bb z nand2
+.ends
+
+//NAND2 only or4 TPD 0.12ns down from 0.29ns
+.subckt f4st_or4 a b c d z
+Xna a b ab f4st_or2
+Xnb c d cd f4st_or2
+Xnz ab cd z f4st_or2
+.ends
+
+//NAND2 only xor2 TPD 0.09ns down from 0.14ns
+.subckt f4st_xor2 a b z
+Xnand1  a   b   i1   nand2
+Xnand2A a   i1  i2a  nand2
+Xnand2B b   i1  i2b  nand2
+Xnand3  i2a i2b z   nand2
+.ends
