@@ -1,0 +1,65 @@
+// F4ST PARTS BIN
+// RAGUL BALAJI & JAMES R T
+// SUTD 50.002 Computation Structures 2D WEEK!
+
+.include "../nominal.jsim"
+.include "../stdcell.jsim"
+
+// PARTS AVAILABLE IN THIS BIN
+// AND GATES
+//   Xid a b z f4st_and2
+//   Xid a b c z f4st_and3
+//   Xid a b c d z f4st_and4
+// OR GATES
+//   Xid a b z f4st_or2
+//   Xid a b c z f4st_or3
+//   Xid a b c d z f4st_or4
+// XOR GATES
+//   Xid a b z f4st_xor2
+
+
+//NAND2 only and2 TPD 0.05ns down from 0.12ns
+.subckt f4st_and2 a b z 
+Xnab a b iz nand2
+Xiiz iz z inverter
+.ends
+
+//NAND3 only and3 TPD 0.07ns down from 0.15ns
+.subckt f4st_and3 a b c z 
+Xnabc a b c iz nand3
+Xzout iz z inverter
+.ends
+
+//NAND4 only and4 TPD 0.09ns down from 0.16ns
+.subckt f4st_and4 a b c d z
+Xnabcd a b c d iz nand4
+Xzout iz z inverter
+.ends
+
+//NAND2 only or2 TPD 0.06ns down from 0.15ns
+.subckt f4st_or2 a b z
+Xna a a aa nand2
+Xnb b b bb nand2
+Xnz aa bb z nand2
+.ends
+
+//NOR3 only or3 TPD 0.10ns down from 0.21ns
+.subckt f4st_or3 a b c z
+Xid a b c iz nor3
+Xzout iz z inverter
+.ends
+
+//NAND2 only or4 TPD 0.12ns down from 0.29ns
+.subckt f4st_or4 a b c d z
+Xna a b ab f4st_or2
+Xnb c d cd f4st_or2
+Xnz ab cd z f4st_or2
+.ends
+
+//NAND2 only xor2 TPD 0.09ns down from 0.14ns
+.subckt f4st_xor2 a b z
+Xnand1  a   b   i1   nand2
+Xnand2A a   i1  i2a  nand2
+Xnand2B b   i1  i2b  nand2
+Xnand3  i2a i2b z   nand2
+.ends
