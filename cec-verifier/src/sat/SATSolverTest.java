@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 */
 
+import immutable.ImList;
 import sat.env.*;
 import sat.formula.*;
 import sat.formula.Clause;
@@ -32,8 +33,25 @@ public class SATSolverTest {
 	
 	// TODO: add the main method that reads the .cnf file and calls SATSolver.solve to determine the satisfiability
     public static void main(String args[]) throws IOException {
-        List<String> fileContents = readFile("C:\\projects\\DigiAlpha\\cec-verifier\\sampleCNF\\s8Sat.cnf");
-        System.out.println(parse(fileContents));
+        List<String> fileContents = readFile("/Users/shuyijia/AndroidStudioProjects/MyApp001/code2d/src/main/java/sampleCNF/s8Sat.cnf");
+        Formula f = parse(fileContents);
+        SATSolver.solve(f);
+
+//        ImList<Clause> cls = f.getClauses();
+//        int cSize = Integer.MAX_VALUE;
+//        Clause cSmallest = new Clause();
+//        for (Clause c : cls){
+//            if (c.size() < cSize){
+//                cSize = c.size();
+//                cSmallest = c;
+//            }
+//        }
+//        System.out.println(cSmallest);
+//        Environment e = new Environment();
+//        Literal l = cSmallest.chooseLiteral();
+//        Environment newE = e.putTrue(l.getVariable());
+//        System.out.println(newE);
+
     }
 
     public static List<String> readFile (String fName) throws IOException {
