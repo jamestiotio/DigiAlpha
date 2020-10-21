@@ -5,52 +5,63 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 */
-
-import immutable.ImList;
 import sat.env.*;
 import sat.formula.*;
 import sat.formula.Clause;
 import sat.formula.Literal;
-
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.io.File;
-
 
 public class SATSolverTest {
-    Literal a = PosLiteral.make("a");
-    Literal b = PosLiteral.make("b");
-    Literal c = PosLiteral.make("c");
-    Literal na = a.getNegation();
-    Literal nb = b.getNegation();
-    Literal nc = c.getNegation();
-
-
-
-	
-	// TODO: add the main method that reads the .cnf file and calls SATSolver.solve to determine the satisfiability
     public static void main(String args[]) throws IOException {
-        String path = new File(args[0]).getAbsolutePath();
-        List<String> fileContents = readFile(path);
+        // Check length of args; exactly 1 required
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Exactly 1 argument required!");
+        }
+        // Construct formula
+        String filepath = args[0];
+        List<String> fileContents = readFile(filepath);
         Formula f = parse(fileContents);
-        System.out.println(SATSolver.solve(f));
+        try {
+            FileWriter myWriter = new FileWriter("BoolAssignment.txt");
+            System.out.println("SAT solver starts!!!");
+            long started = System.nanoTime();
+            Environment e = SATSolver.solve(f);
+            long time = System.nanoTime();
+            long timeTaken= time - started;
+            System.out.println("Time:" + timeTaken/1000000.0 + "ms");
+            if (e != null) {
+                System.out.println("satisfiable");
+                String results = e.toString();
+                // Remove "Environment:[]"
+                results = results.substring(13, results.length()-1);
+                String[] arrayResults = results.split(", ");
+                for (String line : arrayResults) {
+                    line = line.replace("->", ":");
+                    myWriter.write(line + "\n");
+                }
+                myWriter.close();
+            }else{
+                System.out.println("not satisfiable");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static List<String> readFile (String fName) throws IOException {
-        List<String> lines = Collections.emptyList();
+        List<String> lines;
         lines = Files.readAllLines((Paths.get(fName)));
-
         return lines;
     }
 
     public static Formula parse(List<String> lines) {
         ArrayList<sat.formula.Literal> literals = new ArrayList<Literal>();
         ArrayList<sat.formula.Clause> clauses = new ArrayList<Clause>();
-        Formula formula = new Formula();
 
         for (String line: lines) {
             if (!(line.toCharArray().length != 0) || line.charAt(0) == 'c' || line.charAt(0) == 'p'){ continue; }
@@ -81,27 +92,6 @@ public class SATSolverTest {
         return makeFm(clauses);
     }
     
-	
-    public void testSATSolver1(){
-    	// (a v b)
-    	//Environment e = SATSolver.solve(makeFm(makeCl(a,b))	);
-/*
-    	assertTrue( "one of the literals should be set to true",
-    			Bool.TRUE == e.get(a.getVariable())  
-    			|| Bool.TRUE == e.get(b.getVariable())	);
-    	
-*/    	
-    }
-    
-    
-    public void testSATSolver2(){
-    	// (~a)
-    	//Environment e = SATSolver.solve(makeFm(makeCl(na)));
-/*
-    	assertEquals( Bool.FALSE, e.get(na.getVariable()));
-*/    	
-    }
-    
     private static Formula makeFm(ArrayList<Clause> e) {
         Formula f = new Formula();
         for (Clause c : e) {
@@ -117,7 +107,4 @@ public class SATSolverTest {
         }
         return c;
     }
-    
-    
-    
 }
