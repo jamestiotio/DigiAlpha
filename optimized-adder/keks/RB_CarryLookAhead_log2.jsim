@@ -5,14 +5,14 @@
 .include "../stdcell.jsim" 
 //.include "../timings/2dcheckoff_100ns.jsim" // 0 points
 //.include "../timings/2dcheckoff_6ns.jsim" // 1 points
-.include "../timings/2dcheckoff_4ns.jsim" // 3 points
-//.include "../timings/2dcheckoff_3ns.jsim" // 6 points
+//.include "../timings/2dcheckoff_4ns.jsim" // 3 points
+.include "../timings/2dcheckoff_3ns.jsim" // 6 points
 
 // 32 BIT CARRY LOOKAHEAD ADDER
 .subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
 
 // XOR invert
-XxorB B[31:0] op0#32 xb[31:0] f4st_xor2
+XxorB B[31:0] op0#32 xb[31:0] xor2
 
 // PropGenSum X Blocks - 32 of them
 Xpgs A[31:0] xb[31:0] C[31:0] S[31:0] G[31:0] P[31:0] blockX
@@ -64,17 +64,17 @@ Xc301a g2hl[3] p2hl[3] g2hl[2] p2hl[2] cl3b[1] cl2b[2] cl2b[3] g3hl[1] p3hl[1] b
 Xc400a g3hl[1] p3hl[1] g3hl[0] p3hl[0] op0 cl3b[0] cl3b[1] usedg usedp blockY
 
 // Zero Bit - "Big NOR"
-Xors1 S[7:0] S[15:8] S[23:16] S[31:24] toors2[7:0] f4st_or4
-Xors2 toors2[1:0] toors2[3:2] toors2[5:4] toors2[7:6] toors3[1:0] f4st_or4
+Xors1 S[7:0] S[15:8] S[23:16] S[31:24] toors2[7:0] nor4
+Xors2 toors2[1:0] toors2[3:2] toors2[5:4] toors2[7:6] toors3[1:0] nand4
 Xors3 toors3[0] toors3[1] z nor2 
 
 // Overflow Bit
 XnotA31 A[31] notA31 inverter
 XnotXB31 xb[31] notXB31 inverter
 XnotS31 S[31] notS31 inverter
-Xflow1a A[31] xb[31] notS31 flow1a f4st_and3
-Xflow1b notA31 notXB31 S[31] flow1b f4st_and3
-Xflowout flow1a flow1b v f4st_or2
+Xflow1a A[31] xb[31] notS31 flow1a nand3
+Xflow1b notA31 notXB31 S[31] flow1b nand3
+Xflowout flow1a flow1b v nand2
 
 // Negative Bit
 Xnegbit S[31] n bitbond
@@ -85,8 +85,8 @@ Xnegbit S[31] n bitbond
 .subckt blockX a b c s g p 
 Xgen  a b g f4st_and2
 Xprop a b p f4st_or2
-Xaxrb a b i f4st_xor2
-Xsumo i c s f4st_xor2
+Xaxrb a b i xor2
+Xsumo i c s xor2
 .ends
 
 // ref to https://d2vlcm61l7u1fs.cloudfront.net/media%2Fd75%2Fd75c2b67-ae84-42fe-bb87-6560d8e771fc%2FphpnsMIFh.png
@@ -129,12 +129,4 @@ Xnz aa bb z nand2
 Xna a b ab f4st_or2
 Xnb c d cd f4st_or2
 Xnz ab cd z f4st_or2
-.ends
-
-//NAND2 only xor2 TPD 0.09ns down from 0.14ns
-.subckt f4st_xor2 a b z
-Xnand1  a   b   i1   nand2
-Xnand2A a   i1  i2a  nand2
-Xnand2B b   i1  i2b  nand2
-Xnand3  i2a i2b z   nand2
 .ends

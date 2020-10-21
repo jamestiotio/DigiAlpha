@@ -52,9 +52,9 @@ Xfinal L0P[31:0] L5G[30:0] op0 S[31:0] xor2
 XnotA31 A[31] notA31 inverter
 XnotXB31 xb[31] notXB31 inverter
 XnotS31 S[31] notS31 inverter
-Xflow1a A[31] xb[31] notS31 flow1a f4st_and3
-Xflow1b notA31 notXB31 S[31] flow1b f4st_and3
-Xflowout flow1a flow1b v f4st_or2
+Xflow1a A[31] xb[31] notS31 flow1a nand3
+Xflow1b notA31 notXB31 S[31] flow1b nand3
+Xflowout flow1a flow1b v nand2
 
 // Zero Bit - "Big NOR" INVERTING LOGIC VERSION
 Xors1 S[7:0] S[15:8] S[23:16] S[31:24] toors2[7:0] nor4
