@@ -7,7 +7,7 @@
 //.include "../timings/2dcheckoff_6ns.jsim" // 1 points
 //.include "../timings/2dcheckoff_4ns.jsim" // 3 points
 //.include "../timings/2dcheckoff_3ns.jsim" // 6 points
-.include "../timings/2dcheckoff_2p8ns.jsim" // BONUS FAIL
+.include "../timings/2dcheckoff_2p8ns.jsim" // BONUS PASSES
 
 // 32 BIT KOGGE STONE PARALLEL PREFIX ADDER
 // Making refrence to http://cc.sjtu.edu.cn/upload/20150615174224327.pdf
