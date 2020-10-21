@@ -7,7 +7,6 @@ This is a SUTD 2020 ISTD Term 4 2D Project, comprised of these courses:
 - 50.004 Introduction to Algorithms (`sat-solver`)
 
 Group 11 Team Members:
-
 - [Velusamy Sathiakumar Ragul Balaji](https://github.com/ragulbalaji) (Team Leader)
 - [James Raphael Tiovalen](https://github.com/jamestiotio)
 - [Anirudh Shrinivason](https://github.com/Anirudh181001)
