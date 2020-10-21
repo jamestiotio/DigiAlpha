@@ -320,6 +320,7 @@ Vclk clk 0 pulse(3.3,0,1.1ns,.1ns,.1ns,1.1ns)
 .plot L(xz)
 .plot L(xv)
 .plot L(xn)
+.plot xop0
 .plot clk
 
 
