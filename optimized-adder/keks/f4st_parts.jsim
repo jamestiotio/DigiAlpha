@@ -5,6 +5,8 @@
 .include "../nominal.jsim"
 .include "../stdcell.jsim"
 
+// NOTE: These parts are generally faster than their stdcell counterparts, at the cost of more area usage
+// Original XOR2 and AND3 might still be faster for some reason (perhaps due to load issues)
 // PARTS AVAILABLE IN THIS BIN
 // AND GATES
 //   Xid a b z f4st_and2
