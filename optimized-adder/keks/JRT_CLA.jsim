@@ -1,12 +1,13 @@
 * Carry-Lookahead 32-Bit Adder
+* 3-Stage CLA with stdcell AND3 and XOR2 gates
 
 .include "f4st_parts.jsim"
-.include "../timings/2dcheckoff_6ns.jsim"
+.include "../timings/2dcheckoff_4ns.jsim"
 
 * Form propagate bit and generate bit
 * OR might be slightly faster than XOR for p-bit
 .subckt pg_generate a b p g
-Xpout a b p f4st_xor2
+Xpout a b p xor2
 Xgout a b g f4st_and2
 .ends
 
@@ -30,7 +31,7 @@ Xv and0_out and1_out v nand2
 * Prepare Bits
 Xpg0 a[1:0] b[1:0] p[1:0] g[1:0] pg_generate
 Xand0 p[0] cin and0_out f4st_and2
-Xand1 p[0:1] cin and1_out f4st_and3
+Xand1 p[0:1] cin and1_out and3
 Xand2 p[1] g[0] and2_out f4st_and2
 
 * Result Bits
@@ -38,8 +39,8 @@ Xc0 g[0] and0_out c[0] f4st_or2
 
 * Output Bits
 Xcout g[1] and[1:2]_out cout f4st_or3
-Xs0 cin p[0] s[0] f4st_xor2
-Xsbits c[0] p[1] s[1] f4st_xor2
+Xs0 cin p[0] s[0] xor2
+Xsbits c[0] p[1] s[1] xor2
 Xpg p[0:1] pg f4st_and2
 Xgg g[1] and2_out gg f4st_or2
 .ends
@@ -49,14 +50,14 @@ Xgg g[1] and2_out gg f4st_or2
 * Prepare Bits
 Xpg0 a[3:0] b[3:0] p[3:0] g[3:0] pg_generate
 Xand0 p[0] cin and0_out f4st_and2
-Xand1 p[0:1] cin and1_out f4st_and3
+Xand1 p[0:1] cin and1_out and3
 Xand2 p[1] g[0] and2_out f4st_and2
 Xand3 p[0:2] cin and3_out f4st_and4
-Xand4 p[1:2] g[0] and4_out f4st_and3
+Xand4 p[1:2] g[0] and4_out and3
 Xand5 p[2] g[1] and5_out f4st_and2
 Xand6 p[0:3] cin and6_out f4st_and5
 Xand7 p[1:3] g[0] and7_out f4st_and4
-Xand8 p[2:3] g[1] and8_out f4st_and3
+Xand8 p[2:3] g[1] and8_out and3
 Xand9 p[3] g[2] and9_out f4st_and2
 
 * Result Bits
@@ -66,8 +67,8 @@ Xc2 g[2] and[3:5]_out c[2] f4st_or4
 
 * Output Bits
 Xcout g[3] and[6:9]_out cout f4st_or5
-Xs0 cin p[0] s[0] f4st_xor2
-Xsbits c[2:0] p[3:1] s[3:1] f4st_xor2
+Xs0 cin p[0] s[0] xor2
+Xsbits c[2:0] p[3:1] s[3:1] xor2
 Xpg p[0:3] pg f4st_and4
 Xgg g[3] and[7:9]_out gg f4st_or4
 .ends
@@ -77,32 +78,32 @@ Xgg g[3] and[7:9]_out gg f4st_or4
 * Prepare Bits
 Xpg0 a[7:0] b[7:0] p[7:0] g[7:0] pg_generate
 Xand0 p[0] cin and0_out f4st_and2
-Xand1 p[0:1] cin and1_out f4st_and3
+Xand1 p[0:1] cin and1_out and3
 Xand2 p[1] g[0] and2_out f4st_and2
 Xand3 p[0:2] cin and3_out f4st_and4
-Xand4 p[1:2] g[0] and4_out f4st_and3
+Xand4 p[1:2] g[0] and4_out and3
 Xand5 p[2] g[1] and5_out f4st_and2
 Xand6 p[0:3] cin and6_out f4st_and5
 Xand7 p[1:3] g[0] and7_out f4st_and4
-Xand8 p[2:3] g[1] and8_out f4st_and3
+Xand8 p[2:3] g[1] and8_out and3
 Xand9 p[3] g[2] and9_out f4st_and2
 Xand10 p[0:4] cin and10_out f4st_and6
 Xand11 p[1:4] g[0] and11_out f4st_and5
 Xand12 p[2:4] g[1] and12_out f4st_and4
-Xand13 p[3:4] g[2] and13_out f4st_and3
+Xand13 p[3:4] g[2] and13_out and3
 Xand14 p[4] g[3] and14_out f4st_and2
 Xand15 p[0:5] cin and15_out f4st_and7
 Xand16 p[1:5] g[0] and16_out f4st_and6
 Xand17 p[2:5] g[1] and17_out f4st_and5
 Xand18 p[3:5] g[2] and18_out f4st_and4
-Xand19 p[4:5] g[3] and19_out f4st_and3
+Xand19 p[4:5] g[3] and19_out and3
 Xand20 p[5] g[4] and20_out f4st_and2
 Xand21 p[0:6] cin and21_out f4st_and8
 Xand22 p[1:6] g[0] and22_out f4st_and7
 Xand23 p[2:6] g[1] and23_out f4st_and6
 Xand24 p[3:6] g[2] and24_out f4st_and5
 Xand25 p[4:6] g[3] and25_out f4st_and4
-Xand26 p[5:6] g[4] and26_out f4st_and3
+Xand26 p[5:6] g[4] and26_out and3
 Xand27 p[6] g[5] and27_out f4st_and2
 Xand28 p[0:7] cin and28_out f4st_and9
 Xand29 p[1:7] g[0] and29_out f4st_and8
@@ -110,7 +111,7 @@ Xand30 p[2:7] g[1] and30_out f4st_and7
 Xand31 p[3:7] g[2] and31_out f4st_and6
 Xand32 p[4:7] g[3] and32_out f4st_and5
 Xand33 p[5:7] g[4] and33_out f4st_and4
-Xand34 p[6:7] g[5] and34_out f4st_and3
+Xand34 p[6:7] g[5] and34_out and3
 Xand35 p[7] g[6] and35_out f4st_and2
 
 * Result Bits
@@ -124,23 +125,50 @@ Xc6 g[6] and[21:27]_out c[6] f4st_or8
 
 * Output Bits
 Xcout g[7] and[28:35]_out cout f4st_or9
-Xs0 cin p[0] s[0] f4st_xor2
-Xsbits c[6:0] p[7:1] s[7:1] f4st_xor2
+Xs0 cin p[0] s[0] xor2
+Xsbits c[6:0] p[7:1] s[7:1] xor2
 Xpg p[0:7] pg f4st_and8
 Xgg g[7] and[29:35]_out gg f4st_or8
 .ends
 
 * Final 32-Bit Adder
 .subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
-* Main Adder
-Xxor0 B[31:0] op0#32 XB[31:0] f4st_xor2
-XCLA0 A[7:0] XB[7:0] op0 S[7:0] drop[0] PG[0] GG[0] CLA8
-XCLA1 A[15:8] XB[15:8] CG[0] S[15:8] drop[1] PG[1] GG[1] CLA8
-XCLA2 A[23:16] XB[23:16] CG[1] S[23:16] drop[2] PG[2] GG[2] CLA8
-XCLA3 A[31:24] XB[31:24] CG[2] S[31:24] drop[3] PG[3] GG[3] CLA8
+Xxor0 B[31:0] op0#32 XB[31:0] xor2
+
+* CLA Level 1
+XCLA0 A[3:0] XB[3:0] op0 S[3:0] drop[0] PG[0] GG[0] CLA4
+XCLA1 A[7:4] XB[7:4] CG[0] S[7:4] drop[1] PG[1] GG[1] CLA4
+XCLA2 A[11:8] XB[11:8] CG[1] S[11:8] drop[2] PG[2] GG[2] CLA4
+XCLA3 A[15:12] XB[15:12] CG[2] S[15:12] drop[3] PG[3] GG[3] CLA4
+XCLA4 A[19:16] XB[19:16] CGG[0] S[19:16] drop[4] PG[4] GG[4] CLA4
+XCLA5 A[23:20] XB[23:20] CG[4] S[23:20] drop[5] PG[5] GG[5] CLA4
+XCLA6 A[27:24] XB[27:24] CG[5] S[27:24] drop[6] PG[6] GG[6] CLA4
+XCLA7 A[31:28] XB[31:28] CG[6] S[31:28] drop[7] PG[7] GG[7] CLA4
+
+* CLA Level 2
 Xand0 PG[0] op0 and0_out f4st_and2
-xand1 PG[2:1] CG[1:0] and[2:1]_out f4st_and2
-XCGs and[2:0]_out GG[2:0] CG[2:0] f4st_or2
+Xand12 PG[2:1] CG[1:0] and[2:1]_out f4st_and2
+Xor0 and[2:0]_out GG[2:0] CG[2:0] f4st_or2
+
+XPGG0 PG[3:0] PGG[0] f4st_and4
+XGGG0_and0 GG[0] PG[3:1] GGG0_and0 f4st_and4
+XGGG0_and1 GG[1] PG[3:2] GGG0_and1 and3
+XGGG0_and2 GG[2] PG[3] GGG0_and2 f4st_and2
+XGGG0 GG[3] GGG0_and[2:0] GGG[0] f4st_or4
+
+Xand3 PG[4] CGG[0] and3_out f4st_and2
+Xand45 PG[6:5] CG[5:4] and[5:4]_out f4st_and2
+Xor1 and[5:3]_out GG[6:4] CG[6:4] f4st_or2
+
+XPGG1 PG[7:4] PGG[1] f4st_and4
+XGGG1_and0 GG[4] PG[7:5] GGG1_and0 f4st_and4
+XGGG1_and1 GG[5] PG[7:6] GGG1_and1 and3
+XGGG1_and2 GG[6] PG[7] GGG1_and2 f4st_and2
+XGGG1 GG[7] GGG1_and[2:0] GGG[1] f4st_or4
+
+* CLA Level 3
+XL3_and0 PGG[0] op0 L3_and0 f4st_and2
+XCGG L3_and0 GGG[0] CGG[0] f4st_or2
 
 * Additional ZVN Outputs
 Xeq S[31:0] z equality

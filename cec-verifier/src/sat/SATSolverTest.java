@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.io.File;
 
 
 public class SATSolverTest {
@@ -33,7 +34,8 @@ public class SATSolverTest {
 	
 	// TODO: add the main method that reads the .cnf file and calls SATSolver.solve to determine the satisfiability
     public static void main(String args[]) throws IOException {
-        List<String> fileContents = readFile("/Users/shuyijia/AndroidStudioProjects/MyApp001/code2d/src/main/java/sampleCNF/largeSat.cnf");
+        String path = new File(args[0]).getAbsolutePath();
+        List<String> fileContents = readFile(path);
         Formula f = parse(fileContents);
         System.out.println(SATSolver.solve(f));
     }
