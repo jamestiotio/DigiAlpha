@@ -6,15 +6,15 @@
 //.include "../timings/2dcheckoff_100ns.jsim" // 0 points
 //.include "../timings/2dcheckoff_6ns.jsim" // 1 points
 //.include "../timings/2dcheckoff_4ns.jsim" // 3 points
-.include "../timings/2dcheckoff_3ns.jsim" // 6 points
-//.include "../timings/2dcheckoff_2p9ns.jsim" // BONUS FAIL
+//.include "../timings/2dcheckoff_3ns.jsim" // 6 points
+.include "../timings/2dcheckoff_2p8ns.jsim" // BONUS FAIL
 
 // 32 BIT KOGGE STONE PARALLEL PREFIX ADDER
 // Making refrence to http://cc.sjtu.edu.cn/upload/20150615174224327.pdf
 .subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
 
 // XOR invert
-XxorB  B[31:0] op0#32 xb[31:0] f4st_xor2
+XxorB  B[31:0] op0#32 xb[31:0] xor2
 
 // PropGen Blocks - 32 of them
 Xpgens A[31:0] xb[31:0] L0P[31:0] L0G[31:1] kek0 GenPG
@@ -46,7 +46,7 @@ Xgrey5 L4P[31:16] L4G[31:16] L4G[15:0] L5G[31:16] greybox
 // No need blackboxes, the terms have been computed
 
 // COMPUTE Sum
-Xfinal L0P[31:0] L5G[30:0] op0 S[31:0] f4st_xor2
+Xfinal L0P[31:0] L5G[30:0] op0 S[31:0] xor2
 
 // Overflow Bit
 XnotA31 A[31] notA31 inverter
@@ -67,7 +67,7 @@ Xnegbit S[31] n bitbond
 
 // standard stuff from CLA
 .subckt GenPG a b p g
-XgenP a b p f4st_xor2
+XgenP a b p xor2
 XgenG a b g f4st_and2
 .ends
 
@@ -108,12 +108,4 @@ Xzout iz z inverter
 Xna a a aa nand2
 Xnb b b bb nand2
 Xnz aa bb z nand2
-.ends
-
-//NAND2 only xor2 TPD 0.09ns down from 0.14ns
-.subckt f4st_xor2 a b z
-Xnand1  a   b   i1   nand2
-Xnand2A a   i1  i2a  nand2
-Xnand2B b   i1  i2b  nand2
-Xnand3  i2a i2b z   nand2
 .ends
