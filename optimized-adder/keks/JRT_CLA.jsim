@@ -133,7 +133,19 @@ Xgg g[7] and[29:35]_out gg f4st_or8
 
 * Final 32-Bit Adder
 .subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
-Xxor0 B[31:0] op0#32 XB[31:0] xor2
+
+* Implement hex inversion instead of regular XOR2 for high fidelity pipe-lining, at the cost of more area usage
+* Double inverters serve to amplify the digital signal power (high fan-out capabilities)
+XinvB B[31:0] ib[31:0] inverter
+Xinvop0 op0 opmid inverter_2
+Xinvopmid1 opmid op1 inverter_4
+Xinv2opmid2 opmid op2 inverter_2
+Xinv2opmid3 opmid op3 inverter_2
+Xinv2opmid4 opmid op4 inverter
+XselBa op1#8 B[7:0] ib[7:0] xb[7:0] mux2
+XselBb op2#8 B[15:8] ib[15:8] xb[15:8] mux2
+XselBc op3#8 B[23:16] ib[23:16] xb[23:16] mux2
+XselBd op4#8 B[31:24] ib[31:24] xb[31:24] mux2
 
 * CLA Level 1
 XCLA0 A[3:0] XB[3:0] op0 S[3:0] drop[0] PG[0] GG[0] CLA4
