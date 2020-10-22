@@ -46,6 +46,6 @@ The even bits and odd bits are not treated equally in our selected adder archite
 
 For the deterministic 2-SAT Solver, we implemented Kosaraju's algorithm to achieve polynomial time asymptotics.
 
-For the randomized SAT Solver, we implemented the Relaxed Papadimitriou's Random Walk algorithm.
+For the randomized SAT Solver, we implemented the Relaxed Papadimitriou's Random Walk algorithm [UNCONFIRMED].
 
 A detailed explanation of the implementation details, as well as a comparison between the two algorithms are outlined in our 50.004 report document.
