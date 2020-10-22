@@ -12,16 +12,16 @@
 
 // Implement hex inversion instead of regular XOR2 for high fidelity pipe-lining, at the cost of more area usage
 // Double inverters serve to amplify the digital signal power (high fan-out capabilities)
-XinvB B[31:0] ib[31:0] inverter
-Xinvop0 op0 opmid inverter_2
-Xinvopmid1 opmid op1 inverter_4
-Xinv2opmid2 opmid op2 inverter_2
-Xinv2opmid3 opmid op3 inverter_2
-Xinv2opmid4 opmid op4 inverter
-XselBa op1#8 B[7:0] ib[7:0] xb[7:0] mux2
-XselBb op2#8 B[15:8] ib[15:8] xb[15:8] mux2
-XselBc op3#8 B[23:16] ib[23:16] xb[23:16] mux2
-XselBd op4#8 B[31:24] ib[31:24] xb[31:24] mux2
+XinvB B[31:0] binv[31:0] inverter
+Xinvop0 op0 middle_fork inverter_2
+Xinv2middleA middle_fork sel1 inverter_4
+Xinv2middleB middle_fork sel2 inverter_2
+Xinv2middleC middle_fork sel3 inverter_2
+Xinv2middleD middle_fork sel4 inverter
+X8bitsA sel1#8 B[7:0] binv[7:0] xb[7:0] mux2
+X8bitsB sel2#8 B[15:8] binv[15:8] xb[15:8] mux2
+X8bitsC sel3#8 B[23:16] binv[23:16] xb[23:16] mux2
+X8bitsD sel4#8 B[31:24] binv[31:24] xb[31:24] mux2
 
 // PropGen Blocks - 32 of them
 Xpg A[31:1] xb[31:1] L0P[31:1] L0G[31:1] GenPG
