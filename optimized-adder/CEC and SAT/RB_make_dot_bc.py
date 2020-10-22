@@ -21,7 +21,7 @@ def RippleCarry32BC():
 
 def KoggeStone32BC():
   print("\n") # Neat
-  # Generate Propgate Cells
+  # Generate Propagate Cells
 
   for i in range(32):
     print("L0P%d := ODD(A%d,B%d);" % (i, i, i)) # Pi = Ai XOR Bi
@@ -57,4 +57,3 @@ if __name__ == '__main__':
   print("\n\n") # Neat
   print("MUSTBEFALSE := ODD(RSUM31, KSUM31);")
   print("ASSIGN MUSTBEFALSE;")
-  
