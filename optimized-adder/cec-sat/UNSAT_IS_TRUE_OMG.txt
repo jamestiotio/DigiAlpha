@@ -1,4 +1,4 @@
-➜  CEC and SAT git:(main) ✗ python RB_make_dot_bc.py
+➜  cec-sat git:(main) ✗ python RB_make_dot_bc.py
 BC1.1
 
 
@@ -475,7 +475,7 @@ KSUM31 := ODD(L0P31, L5G30);
 
 MUSTBEFALSE := ODD(RSUM31, KSUM31);
 ASSIGN MUSTBEFALSE;
-➜  CEC and SAT git:(main) ✗ python RB_make_dot_bc.py > RBKoggeStone.bc && ../bcsat/bc2cnf RBKoggeStone.bc RBKoggeStone.cnf -nosimplify
-➜  CEC and SAT git:(main) ✗ java -jar ../findsolssat/findsolssat.jar RBKoggeStone.cnf
+➜  cec-sat git:(main) ✗ python RB_make_dot_bc.py > RBKoggeStone.bc && ../bcsat/bc2cnf RBKoggeStone.bc RBKoggeStone.cnf -nosimplify
+➜  cec-sat git:(main) ✗ java -jar ../findsolssat/findsolssat.jar RBKoggeStone.cnf
 Unsat : true
-➜  CEC and SAT git:(main) ✗ 
+➜  cec-sat git:(main) ✗ 

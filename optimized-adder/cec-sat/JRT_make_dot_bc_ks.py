@@ -10,12 +10,14 @@ def RippleCarry32BC():
 
   print("\n")
 
+  # Implement hex inversion in BC
   for i in range(1, 5):
     print("SEL%d := NOT(OP0INV);" % i)
 
   for i in range(1, 5):
     print("\n")
 
+    # Implement mux selectors using AND, OR and INV
     for j in range(8):
         k = 8 * (i - 1) + j
         print("M%d := AND(Bin%d, BINV%d);" % (k, k, k))
