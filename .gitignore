@@ -1,1 +1,6 @@
 .DS_Store
+*.o
+bc2cnf
+bc2edimacs
+bc2iscas89
+edimacs2bc
