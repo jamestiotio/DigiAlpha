@@ -10,7 +10,7 @@
 .include "../timings/2dcheckoff_2p8ns.jsim" // BONUS PASSES
 
 // 32 BIT KOGGE STONE PARALLEL PREFIX ADDER
-// Making refrence to http://cc.sjtu.edu.cn/upload/20150615174224327.pdf
+// Making reference to http://cc.sjtu.edu.cn/upload/20150615174224327.pdf
 .subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
 
 // XOR invert

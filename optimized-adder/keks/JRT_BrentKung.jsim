@@ -1,0 +1,166 @@
+.include "../nominal.jsim"
+.include "../stdcell.jsim" 
+//.include "../timings/2dcheckoff_100ns.jsim" // 0 points
+//.include "../timings/2dcheckoff_6ns.jsim" // 1 points
+.include "../timings/2dcheckoff_4ns.jsim" // 3 points
+//.include "../timings/2dcheckoff_3ns.jsim" // 6 points
+//.include "../timings/2dcheckoff_2p8ns.jsim" // BONUS PASSES
+
+// 32 BIT BRENT KUNG PARALLEL PREFIX ADDER
+// Making reference to http://cc.sjtu.edu.cn/upload/20150615174224327.pdf
+.subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
+
+// XOR invert
+XxorB B[31:0] op0#32 xb[31:0] xor2
+
+// PropGen Blocks - 32 of them
+XPG A[30:0:2] xb[30:0:2] L0P[31:1:2] L0G[31:1:2] GenPGInv
+XPGinv A[31:1:2] xb[31:1:2] L0P[32:2:2] L0G[32:2:2] GenPG
+Xbuf op0 L9G[0] buffer
+
+// Layer 1 - L0P L0G >> L1P L1G
+XL1greyinv L0G[1] L0P[1] op0 L1G[1] greyinv
+Xblackspecial0L1 L0G[19:3:4] L0P[19:3:4] L0G[18:2:4] L0P[18:2:4] L1G[19:3:4] L1P[19:3:4] blackspecial
+Xblackspecial1L1 L0G[27] L0P[27] L0G[26] L0P[26] L1G[27] L1P[27] blackspecial
+Xblackinv0L1 L0G[29:5:4] L0P[29:5:4] L0G[28:4:4] L0P[28:4:4] L1G[29:5:4] L1P[29:5:4] blackinv
+Xblackinv1L1 L0G[31:23:8] L0P[31:23:8] L0G[30:22:8] L0P[30:22:8] L1G[31:23:8] L1P[31:23:8] blackinv
+
+// Layer 2 - L1P L1G >> L2P L2G
+XL2greyinv L1G[3] L1P[3] L1G[1] L2G[3] greyinv
+XblackspecialL2 L1G[15:7:8] L1P[15:7:8] L1G[13:5:8] L1P[13:5:8] L2G[15:7:8] L2P[15:7:8] blackspecial
+Xblackinv0L2 L1G[11] L1P[11] L1G[9] L1P[9] L2G[11] L2P[11] blackinv
+Xblackinv1L2 L1G[31:19:4] L1P[31:19:4] L1G[29:17:4] L1P[29:17:4] L2G[31:19:4] L2P[31:19:4] blackinv
+
+// Layer 3 - L2P L2G >> L3P L3G
+XL3greyinv L2G[7] L2P[7] L2G[3] L3G[7] greyinv
+XblackspecialL3 L2G[23:15:8] L2P[23:15:8] L2G[19:11:8] L2P[19:11:8] L3G[23:15:8] L3P[23:15:8] blackspecial
+XblackinvL3 L2G[31] L2P[31] L2G[27] L2P[27] L3G[31] L3P[31] blackinv
+
+// Layer 4 - L3P L3G >> L4P L4G
+XL4greyinv L3G[15] L3P[15] L3G[7] L4G[15] greyinv
+XblackinvL4 L3G[31] L3P[31] L3G[23] L3P[23] L4G[31] L4P[31] blackinv
+
+// Layer 5
+XL5greyinv L4G[31] L4P[31] L4G[15] L5G[31] greyinv
+
+// Layer 6
+XL6greyinv L3G[23] L3P[23] L4G[15] L6G[23] greyinv
+
+// Layer 7
+XL7greybox0 L2G[11] L2P[11] L3G[7] L7G[11] greybox
+XL7greybox1 L2G[19] L2P[19] L4G[15] L7G[19] greybox
+XL7greybox2 L2G[27] L2P[27] L6G[23] L7G[27] greybox
+
+// Layer 8
+XL8greybox0 L1G[29:13:8] L1P[29:13:8] L7G[27:11:8] L8G[29:13:8] greybox
+XL8greybox1 L1G[25] L1P[25] L6G[23] L8G[25] greybox
+XL8greybox2 L1G[17] L1P[17] L4G[15] L8G[17] greybox
+XL8greybox3 L1G[9] L1P[9] L3G[7] L8G[9] greybox
+XL8greybox4 L1G[5] L1P[5] L2G[3] L8G[5] greybox
+
+// Layer 9
+XL9greybox0 L0G[30:6:4] L0P[30:6:4] L8G[29:5:4] L9G[30:6:4] greybox
+XL9greybox1 L0G[28:12:8] L0P[28:12:8] L7G[27:11:8] L9G[28:12:8] greybox
+XL9greybox2 L0G[24] L0P[24] L6G[23] L9G[24] greybox
+XL9greybox3 L0G[16] L0P[16] L4G[15] L9G[16] greybox
+XL9greybox4 L0G[8] L0P[8] L3G[7] L9G[8] greybox
+XL9greybox5 L0G[4] L0P[4] L2G[3] L9G[4] greybox
+XL9greybox6 L0G[2] L0P[2] L1G[1] L9G[2] greybox
+
+XL9buffer0 L1G[1] L9G[1] buffer
+XL9buffer1 L4G[15] L9G[15] buffer
+XL9bitbond0 L8G[29:5:4] L9G[29:5:4] bitbond
+XL9bitbond1 L7G[27:11:8] L9G[27:11:8] bitbond
+XL9bitbond2 L6G[23] L9G[23] bitbond
+XL9bitbond3 L5G[31] L9G[31] bitbond
+XL9bitbond4 L3G[7] L9G[7] bitbond
+XL9bitbond5 L2G[3] L9G[3] bitbond
+XL9greyinv L0G[32] L0P[32] L5G[31] L9G[32] greyinv
+
+// COMPUTE Sum
+Xfinal L0P[32:1] L9G[31:0] S[31:0] xor2
+
+// Overflow Bit
+XnotA31 A[31] notA31 inverter
+XnotXB31 xb[31] notXB31 inverter
+XnotS31 S[31] notS31 inverter
+Xflow1a A[31] xb[31] notS31 flow1a nand3
+Xflow1b notA31 notXB31 S[31] flow1b nand3
+Xflowout flow1a flow1b v nand2
+
+// Zero Bit - "Big NOR" INVERTING LOGIC VERSION
+Xors1 S[7:0] S[15:8] S[23:16] S[31:24] toors2[7:0] nor4
+Xors2 toors2[7:6] toors2[5:4] toors2[3:2] toors2[1:0] toors3[1:0] nand4
+Xors3 toors3[1] toors3[0] z nor2
+
+// Negative Bit
+Xnegbit S[31] n bitbond
+.ends
+
+// standard stuff from CLA
+.subckt GenPG a b p g
+XgenP a b p1 nor2
+XgenP2 a b p1 p aoi21
+XgenG a b g f4st_and2
+.ends
+
+.subckt GenPGInv a b p g
+Xprecompand a b g nand2
+XgenP a b p1 nor2
+XgenP2 a b p1 p aoi21
+.ends
+
+.subckt blackbox gt pt gl pl gg pp
+XBand pt pl pp f4st_and2
+.ends
+
+.subckt greybox gt pt gl gg
+Xinv1 gt invgt inverter
+XBnand1 pt gl PinandGj nand2
+XBnand2 invgt PinandGj gg nand2
+.ends
+
+// Accepts inverted Gi,Gj input, used to replace cells which take Gi,Gj directly from inverted precomp
+.subckt blackinv notgt pt gl pl gg pp
+XIBnand1 pt gl 1 nand2
+XIBnand2 notgt 1 gg nand2
+XIBand2 pt pl pp f4st_and2
+.ends
+
+// Used to pass inverted G to next grey cell along critical path
+.subckt blackspecial notgt pt gl pl notgg pp
+XIBnand1 pt gl 1 nand2
+XIBnand2 notgt 1 notgg f4st_and2
+XIBand2 pt pl pp f4st_and2
+.ends
+
+// Accepts inverted Gi input, used to replace cells which take Gi directly from inverted precomp
+.subckt greyinv notgt pt gl gg
+XIGnand1 pt gl 1 nand2
+XIGnand2 notgt 1 gg nand2
+.ends
+
+.subckt bitbond a b
+.connect a b
+.ends
+
+// -------------------------------- FAST PARTS BELOW -------------------------------- //
+
+//NAND2 only and2 TPD 0.05ns down from 0.12ns
+.subckt f4st_and2 a b z 
+Xnab a b iz nand2
+Xiiz iz z inverter
+.ends
+
+//NAND3 only and3 TPD 0.07ns down from 0.15ns
+.subckt f4st_and3 a b c z 
+Xnabc a b c iz nand3
+Xzout iz z inverter
+.ends
+
+//NAND2 only or2 TPD 0.06ns down from 0.15ns
+.subckt f4st_or2 a b z
+Xna a a aa nand2
+Xnb b b bb nand2
+Xnz aa bb z nand2
+.ends

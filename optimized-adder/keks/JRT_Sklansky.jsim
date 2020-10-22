@@ -1,0 +1,128 @@
+.include "../nominal.jsim"
+.include "../stdcell.jsim" 
+//.include "../timings/2dcheckoff_100ns.jsim" // 0 points
+//.include "../timings/2dcheckoff_6ns.jsim" // 1 points
+.include "../timings/2dcheckoff_4ns.jsim" // 3 points
+//.include "../timings/2dcheckoff_3ns.jsim" // 6 points
+//.include "../timings/2dcheckoff_2p8ns.jsim" // BONUS PASSES
+
+// 32 BIT SKLANSKY PARALLEL PREFIX ADDER
+// Making reference to http://cc.sjtu.edu.cn/upload/20150615174224327.pdf
+.subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
+
+// XOR invert
+XxorB B[31:0] op0#32 xb[31:0] xor2
+
+// PropGen Blocks - 32 of them
+Xpgens A[31:2] xb[31:2] L0P[31:2] L0G[31:2] GenPG
+Xpng0 A[0] xb[0] L0P[0] preG GenPG
+Xprep preG L0P[0] op0 L0G[0] greybox
+
+// Layer 1 - L0P L0G >> L1P L1G
+Xpass1 L0G[0] L5G[0] bitbond
+Xprecompgrey1 A[1] xb[1] L0G[0] L0G[1] L0P[1] L1G[1] precompgreybox
+XpassL1 L0G[30:2:2] L1G[30:2:2] bitbond
+XblacL1 L0G[31:3:2] L0P[31:3:2] L0G[30:2:2] L0P[30:2:2] L1G[31:3:2] L1P[31:3:2] blackbox
+
+// Layer 2 - L1P L1G >> L2P L2G
+Xpass2 L1G[1] L5G[1] bitbond
+XgreyL2 L1G[3:2] L1P[3] L0P[2] L1G[1]#2 L2G[3:2] greybox
+Xpass0L2 L1G[28:4:4] L2G[28:4:4] bitbond
+Xpass1L2 L1G[29:5:4] L2G[29:5:4] bitbond
+Xblac0L2 L1G[30:6:4] L0P[30:6:4] L1G[29:5:4] L1P[29:5:4] L2G[30:6:4] L2P[30:6:4] blackbox
+Xblac1L2 L1G[31:7:4] L1P[31:7:4] L1G[29:5:4] L1P[29:5:4] L2G[31:7:4] L2P[31:7:4] blackbox
+
+// Layer 3 - L2P L2G >> L3P L3G
+Xpass3 L2G[3:2] L5G[3:2] bitbond
+XgreyL3 L2G[7:4] L2P[7:6] L1P[5] L0P[4] L2G[3]#4 L3G[7:4] greybox
+Xpass0L3 L2G[11:8] L3G[11:8] bitbond
+Xblac0L3 L2G[15:12] L2P[15:14] L1P[13] L0P[12] L2G[11]#4 L2P[11]#4 L3G[15:12] L3P[15:12] blackbox
+Xpass1L3 L2G[19:16] L3G[19:16] bitbond
+Xblac1L3 L2G[23:20] L2P[23:22] L1P[21] L0P[20] L2G[19]#4 L2P[19]#4 L3G[23:20] L3P[23:20] blackbox
+Xpass2L3 L2G[27:24] L3G[27:24] bitbond
+Xblac2L3 L2G[31:28] L2P[31:30] L1P[29] L0P[28] L2G[27]#4 L2P[27]#4 L3G[31:28] L3P[31:28] blackbox
+
+// Layer 4 - L3P L3G >> L4P L4G
+Xpass4 L3G[7:4] L5G[7:4] bitbond
+XgreyL4 L3G[15:8] L3P[15:12] L2P[11:10] L1P[9] L0P[8] L3G[7]#8 L4G[15:8] greybox
+XpassL4 L3G[23:16] L4G[23:16] bitbond
+XblacL4 L3G[31:24] L3P[31:28] L2P[27:26] L1P[25] L0P[24] L3G[23]#8 L3P[23]#8 L4G[31:24] L4P[31:24] blackbox
+
+// Layer 5 - L4P L4G >> L5G
+Xpass5 L4G[15:8] L5G[15:8] bitbond
+Xgrey5 L4G[31:16] L4P[31:24] L3P[23:20] L2P[19:18] L1P[17] L0P[16] L4G[15]#16 L5G[31:16] greybox
+// No need blackboxes, the terms have been computed
+
+// COMPUTE Sum
+Xfinal L0P[31:0] L5G[30:0] op0 S[31:0] xor2
+
+// Overflow Bit
+XnotA31 A[31] notA31 inverter
+XnotXB31 xb[31] notXB31 inverter
+XnotS31 S[31] notS31 inverter
+Xflow1a A[31] xb[31] notS31 flow1a nand3
+Xflow1b notA31 notXB31 S[31] flow1b nand3
+Xflowout flow1a flow1b v nand2
+
+// Zero Bit - "Big NOR" INVERTING LOGIC VERSION
+Xors1 S[7:0] S[15:8] S[23:16] S[31:24] toors2[7:0] nor4
+Xors2 toors2[7:6] toors2[5:4] toors2[3:2] toors2[1:0] toors3[1:0] nand4
+Xors3 toors3[1] toors3[0] z nor2
+
+// Negative Bit
+Xnegbit S[31] n bitbond
+.ends
+
+// standard stuff from CLA
+.subckt GenPG a b p g
+XgenP a b p1 nor2
+XgenP2 a b p1 p aoi21
+XgenG a b g f4st_and2
+.ends
+
+// gg = (pt AND gl) OR gt
+// pp = pt AND pl
+.subckt blackbox gt pt gl pl gg pp
+Xaoi pt gl gt igg aoi21 
+Xao  igg gg inverter
+Xpap pt pl pp f4st_and2 
+.ends
+
+// gg = (pt AND gl) OR gt
+.subckt greybox gt pt gl gg
+Xaoi pt gl gt igg aoi21
+Xao  igg gg inverter
+.ends
+
+.subckt precompgreybox a b gin g p gout
+Xprecompnand a b ig nand2
+Xprecompxor a b p xor2
+Xgreynand1 p gin 1 nand2
+Xgreynand2 1 ig gout nand2
+Xgreyinv ig g inverter
+.ends
+
+.subckt bitbond a b
+.connect a b
+.ends
+
+// -------------------------------- FAST PARTS BELOW -------------------------------- //
+
+//NAND2 only and2 TPD 0.05ns down from 0.12ns
+.subckt f4st_and2 a b z 
+Xnab a b iz nand2
+Xiiz iz z inverter
+.ends
+
+//NAND3 only and3 TPD 0.07ns down from 0.15ns
+.subckt f4st_and3 a b c z 
+Xnabc a b c iz nand3
+Xzout iz z inverter
+.ends
+
+//NAND2 only or2 TPD 0.06ns down from 0.15ns
+.subckt f4st_or2 a b z
+Xna a a aa nand2
+Xnb b b bb nand2
+Xnz aa bb z nand2
+.ends
