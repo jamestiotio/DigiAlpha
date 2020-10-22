@@ -17,20 +17,20 @@ def RippleCarry32BC():
   
   print("") # Neat
   for i in range(32):
-    print("S%d := ODD(A%d,B%d,C%d);" % (i, i, i, i)) # SUMi  = Ai XOR Bi XOR Ci
+    print("RSUM%d := ODD(A%d,B%d,C%d);" % (i, i, i, i)) # SUMi  = Ai XOR Bi XOR Ci
 
 def KoggeStone32BC():
   print("\n") # Neat
   # Generate Propgate Cells
 
+  for i in range(32):
+    print("L0P%d := ODD(A%d,B%d);" % (i, i, i)) # Pi = Ai XOR Bi
+
+  print("") # Neat
   print("kek0 := AND(A0,B0);") # kek0 = Ai AND Bi
   print("L0G0 := OR(AND(L0P0, OP0),kek0);") # gg = (pt AND gl) OR gt
   for i in range(1,32):
     print("L0G%d := AND(A%d,B%d);" % (i, i, i)) # Gi = Ai AND Bi
-
-  print("") # Neat
-  for i in range(32):
-    print("L0P%d := ODD(A%d,B%d);" % (i, i, i)) # Pi = Ai XOR Bi
 
   # Layers
   for l in range(5):
@@ -38,9 +38,9 @@ def KoggeStone32BC():
     for i in range(2**l):
       print("L%dG%d := (L%dG%d);" % (l+1, i, l, i)) # PASSTHRU
     for i in range(2**l,32):
-      print("L%dG%d := OR(AND(L%dP%d, L%dG%d),L%dG%d);" % (l+1, i, l, i, l, i-1, l, i)) # GG
+      print("L%dG%d := OR(AND(L%dP%d, L%dG%d),L%dG%d);" % (l+1, i, l, i, l, i-2**l, l, i)) # GG
     for i in range(2**(l+1),32):
-      print("L%dP%d := AND(L%dP%d, L%dP%d);" % (l+1, i, l, i, l, i-1)) # PP
+      print("L%dP%d := AND(L%dP%d, L%dP%d);" % (l+1, i, l, i, l, i-2**l)) # PP
 
   # Compute Sum
   print("") # Neat
@@ -54,7 +54,7 @@ if __name__ == '__main__':
   KoggeStone32BC()
 
   # TEST IF MSB IS EQUAL
-  print("") # Neat
-  print("Z := ODD(S31, KSUM31);")
-  print("ASSIGN Z;")
+  print("\n\n") # Neat
+  print("MUSTBEFALSE := ODD(RSUM31, KSUM31);")
+  print("ASSIGN MUSTBEFALSE;")
   
