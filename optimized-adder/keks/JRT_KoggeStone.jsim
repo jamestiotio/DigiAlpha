@@ -1,6 +1,3 @@
-// RAGUL BALAJI 2020
-// SUTD 50.002 Computation Structures 2D WEEK!
-
 .include "../nominal.jsim"
 .include "../stdcell.jsim" 
 //.include "../timings/2dcheckoff_100ns.jsim" // 0 points
@@ -13,8 +10,18 @@
 // Making reference to http://cc.sjtu.edu.cn/upload/20150615174224327.pdf
 .subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
 
-// XOR Invert
-XxorB B[31:0] op0#32 xb[31:0] xor2
+// Implement hex inversion instead of regular XOR2 for high fidelity pipe-lining, at the cost of more area usage
+// Double inverters serve to amplify the digital signal power (high fan-out capabilities)
+XinvB B[31:0] binv[31:0] inverter
+Xinvop0 op0 middle_fork inverter_2
+Xinv2middleA middle_fork sel1 inverter_4
+Xinv2middleB middle_fork sel2 inverter_2
+Xinv2middleC middle_fork sel3 inverter_2
+Xinv2middleD middle_fork sel4 inverter
+X8bitsA sel1#8 B[7:0] binv[7:0] xb[7:0] mux2
+X8bitsB sel2#8 B[15:8] binv[15:8] xb[15:8] mux2
+X8bitsC sel3#8 B[23:16] binv[23:16] xb[23:16] mux2
+X8bitsD sel4#8 B[31:24] binv[31:24] xb[31:24] mux2
 
 // PropGen Blocks - 32 of them
 Xpgens A[31:0] xb[31:0] L0P[31:0] L0G[31:1] kek0 GenPG

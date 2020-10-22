@@ -134,7 +134,7 @@ Xgg g[7] and[29:35]_out gg f4st_or8
 * Final 32-Bit Adder
 .subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
 
-// XOR Invert
+* XOR Invert
 XxorB B[31:0] op0#32 xb[31:0] xor2
 
 * CLA Level 1

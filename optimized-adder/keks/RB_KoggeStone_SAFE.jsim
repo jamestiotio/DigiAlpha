@@ -10,11 +10,11 @@
 //.include "../timings/2dcheckoff_2p8ns.jsim" // BONUS PASSES
 
 // 32 BIT KOGGE STONE PARALLEL PREFIX ADDER
-// Making refrence to http://cc.sjtu.edu.cn/upload/20150615174224327.pdf
+// Making reference to http://cc.sjtu.edu.cn/upload/20150615174224327.pdf
 .subckt adder32 op0 A[31:0] B[31:0] S[31:0] z v n
 
-// XOR invert
-XxorB  B[31:0] op0#32 xb[31:0] xor2
+// XOR Invert
+XxorB B[31:0] op0#32 xb[31:0] xor2
 
 // PropGen Blocks - 32 of them
 Xpgens A[31:0] xb[31:0] L0P[31:0] L0G[31:1] kek0 GenPG

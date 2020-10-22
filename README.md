@@ -36,7 +36,7 @@ Better adder designs that utilize the optimized spanning tree mechanism (such as
 
 Other alternatives could also be explored in the future, such as combining carry-skip or carry-select into the adder, implementing HK signals for Radix-8 Booth Encoding (better than Radix-2 or Radix-4) or employing the help of an evolutionary machine learning algorithm to find the best placement of black boxes, grey boxes and buffers to generate a unique flavour of the parallel prefix carry-lookahead adder.
 
-The even bits and odd bits are not treated equally in our selected adder architecture. Also, the more significant bits travel longer distances than the less significant bits. As such, with these factors in our consideration, we arbitrarily choose Bit 7 and Bit 24 as our test bits.
+The even bits and odd bits are not treated equally in our selected adder architecture. Also, the more significant bits travel longer distances than the less significant bits. As such, with these factors in our consideration, we arbitrarily choose Bit 31, the Most Significant Bit (MSB), as our test bit (so as to capture all the different logic-based arithmetic manipulations along the way).
 
 For the CNF file generator, we recreate the original 32-bit adder and our best optimized adder circuit design (the Han-Carlson adder) into a BC (constrained Boolean Circuit) file, which in turn is converted into a CNF file ready for submission by using `bc2cnf` from BCpackage (`bcsat`) and running this command:
 
