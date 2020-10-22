@@ -44,6 +44,8 @@ For the CNF file generator, we recreate the original 32-bit adder and our best o
 bc2cnf -v -nosimplify -nocoi input.bc output.cnf
 ```
 
+For future work, a procedural converter from a JSIM file to a BC file (and hence to a CNF file as well) could be developed to automate the conversion work.
+
 
 
 ## SAT Solver
