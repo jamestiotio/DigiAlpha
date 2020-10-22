@@ -173,7 +173,6 @@ def HanCarlson32BC():
   print("\n")
 
   # Layer 7
-
   print("L7G0 := L6G0;")
   print("L7G1 := L6G1;")
   print("L7G29 := L6G29;")
