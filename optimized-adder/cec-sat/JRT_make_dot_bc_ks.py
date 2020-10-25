@@ -24,8 +24,6 @@ def RippleCarry32BC():
         print("N%d := AND(SEL%d, NOT(BINV%d));" % (k, i, k))
         print("B%d := OR(M%d, N%d);" % (k, k, k))
 
-  print("\n")
-
   # Handle OP0
   print("\nC0 := (OP0);")
 
@@ -33,7 +31,7 @@ def RippleCarry32BC():
   for i in range(32):
     print("C%d := OR(AND(A%d,B%d),AND(A%d,C%d),AND(B%d,C%d));" % (i+1, i, i, i, i, i, i)) # Ci+1 = (Ai AND Bi) OR (Ai AND Ci) OR (Bi AND Ci)
   
-  print("") # Neat
+  print("\n") # Neat
   for i in range(32):
     print("RSUM%d := ODD(A%d,B%d,C%d);" % (i, i, i, i)) # SUMi  = Ai XOR Bi XOR Ci
 
@@ -49,9 +47,7 @@ def KoggeStone32BC():
   for i in range(32):
     print("L0P%d := NOT(OR(AND(A%d, B%d), X%d));" % (i, i, i, i)) # Pi = NOT((Ai AND Bi) OR Xi)
 
-  print("\n")
-
-  print("") # Neat
+  print("\n") # Neat
   print("kek0 := AND(A0,B0);") # kek0 = Ai AND Bi
   print("L0G0 := OR(AND(L0P0, OP0),kek0);") # gg = (pt AND gl) OR gt
   for i in range(1,32):
