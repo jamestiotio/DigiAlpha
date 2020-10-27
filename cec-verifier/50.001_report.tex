@@ -1,0 +1,91 @@
+\documentclass[11pt,fancychapters]{report}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{cite}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{empheq}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{acro}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{subcaption}
+\usepackage{cancel}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{parskip}
+\usepackage{algorithm} 
+\usepackage{algpseudocode} 
+\usepackage{pgfplots}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+\pgfplotsset{width=8cm,compat=1.9}
+\newcommand{\dbar}{{d\mkern-7mu\mathchar'26\mkern-2mu}}
+\newcommand{\boxedeq}[2]{\begin{empheq}[box={\fboxsep=6pt\fbox}]{align}\label{#1}#2\end{empheq}}
+\def\*#1{\mathbf{#1}}
+\def\ab{ab}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\usepackage{tikz}
+\usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
+    decorations.pathreplacing,decorations.pathmorphing,shapes,%
+    matrix,shapes.symbols}
+\geometry{top=1.3in,bottom=1.3in}
+
+\begin{document}
+\centerline{\huge{2D Project --- 50.001 SAT Solver}}
+
+\begin{table}[ht]
+\centering
+\footnotesize
+ \begin{tabular}{c c c c c c} 
+Ragul Balaji&James Raphael Tiovalen&Anirudh Shrinivason&Jia Shuyi&Gerald Hoo&Shoham Chakraborty
+ \end{tabular}
+\end{table}
+
+\subsection*{Result Overview}
+\begin{table}[ht]
+ \begin{tabular}{l l l} 
+Test file: &\texttt{test\_2020.cnf}\\
+Result: &not satisfiable\\
+Running time: &3488.9 ms\\
+Specification: &Macbook Pro 13' 2019, 1.4 GHz Quad-Core Intel Core i5
+ \end{tabular}
+\end{table}
+\subsection*{Approach}
+We employed the DPLL algorithm to solve the SAT problem.
+
+For a given formula $\mathbb{F}$, if there are no clauses present, we know that $\mathbb{F}$ is trivially satisfiable.
+
+If we have at least one clause in $\mathbb{F}$, then we find the smallest clause. If any clause in $\mathbb{F}$ is empty (defined to be FALSE due to our implementation of the \texttt{substitute} method, explained below), we backtrack to the previous level. 
+
+If the smallest clause found is of unit length, we set its only literal to TRUE and use the \texttt{substitute} method to simplify $\mathbb{F}$. We then recursively call the \texttt{solve} method on the simplified $\mathbb{F}$.
+
+Else, we look for the next shortest clause. We will then pick an arbitrary literal from this clause and set the literal to TRUE. We again use the \texttt{substitute} method to simplify $\mathbb{F}$ and solve recursively. If we do not find any conflict when all the clauses are satisfied, we have found a solution. However if a conflict is detected, we backtrack and change the assigned literal to FALSE, simplify $\mathbb{F}$ and recursively solve. We repeat this until we either find a solution, or we exhaust our options. 
+\begin{algorithm}[H]
+	\caption*{\textbf{function} SUBSTITUTE($\mathbb{C}, l$)}
+	// $\mathbb{C}: \textit{a list of clauses}$\\
+	// $l: \textit{input literal to simplify } \mathbb{C}$
+	\begin{algorithmic}[1]
+	\For {$c$ in $\mathbb{C}$}
+	    \If {$c$ contains $l$}
+	        \State remove $c$ from $\mathbb{C}$
+	    \Else \textbf{ if} {$c$ contains $\neg l$}
+	        \State remove $\neg l$ from $c$
+	    \EndIf
+	\EndFor
+	\end{algorithmic} 
+\end{algorithm}
+To understand our \texttt{substitute} method, we use the simple example of $\mathbb{C} = (X\vee Y) \wedge (\neg Y \vee Z)\wedge (Y)$ and $l = Y$. Since the first clause $(X\vee Y)$ contains $Y$, the clause will be evaluated to TRUE no matter what value $X$ takes, therefore we will delete the entire clause. By the same logic, we will also remove the last clause $(Y)$. Since the negation of $Y$ is present in the second clause $(\neg Y \vee Z)$, , the evaluation of this clause will solely depend on $Z$ since $\neg Y = $ FALSE. Thus, $\mathbb{C}$ is simplified to the form $(Z)$. We then return this simplified $\mathbb{C}$ to the \texttt{solve} method for further computation.
+\end{document}

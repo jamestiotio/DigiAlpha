@@ -18,7 +18,7 @@ Group 11 Team Members:
 
 ## CEC Verifier
 
-For the CEC Verifier, we implemented a DPLL algorithm as the default algorithm with multi-threading capabilities [UNCONFIRMED]. Further improvements could be obtained by implementing CDCL as the default algorithm to fallback to, and topping up with an add-on of using Kosaraju's algorithm for 2-SAT Problems.
+For the CEC Verifier, we implemented a DPLL algorithm as the default algorithm. We attempted to implement multi-threading for DPLL but no significant improvements in terms of speed were acquired. Further improvements could be obtained by implementing CDCL as the default algorithm to fallback to (potentially with multi-threading capabilities), and topping up with an add-on of using Kosaraju's algorithm for 2-SAT Problems.
 
 More details are outlined in our 50.001 report document.
 
@@ -52,6 +52,6 @@ For future work, a procedural converter from a JSIM file to a BC file (and hence
 
 For the deterministic 2-SAT Solver, we implemented Kosaraju's algorithm to achieve polynomial time asymptotics.
 
-For the randomized SAT Solver, we implemented the Relaxed Papadimitriou's Random Walk algorithm [UNCONFIRMED].
+For the randomized SAT Solver, we implemented the Monte Carlo random walk algorithm.
 
 A detailed explanation of the implementation details, as well as a comparison between the two algorithms are outlined in our 50.004 report document.
