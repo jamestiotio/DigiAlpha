@@ -26,7 +26,7 @@ More details are outlined in our 50.001 report document.
 
 ## Optimized Adder
 
->  NOTE: JSim's timing analysis report might be slightly incorrect since it seems that there is a constant offset of about 1 nanosecond for the checkoff file to start executing and about 0.2 nanoseconds for the timing analysis program to terminate.
+>  NOTE: JSim's timing analysis report might be slightly incorrect (admittedly) since it seems that there is a constant offset of about 1 nanosecond for the checkoff file to start executing and about 0.2 nanoseconds for the timing analysis program to terminate. This is separate from the declared T<sub>setup</sub> and T<sub>hold</sub>. Also, take note that the delay being considered here is propagation delay (t<sub>pd</sub>) instead of contamination delay (t<sub>cd</sub>).
 
 Our goal is to achieve a 32-bit adder with minimum area-delay product, with the delay being under 3 nanoseconds. (Power usage, length of wire tracks, "neatness" of the components' arrangement, fan-out depth, logic-al levels, number of cells, etc are not taken into consideration.)
 
