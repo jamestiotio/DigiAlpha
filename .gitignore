@@ -1,8 +1,10 @@
 .DS_Store
+Thumbs.db
 *.o
 bc2cnf
 bc2edimacs
 bc2iscas89
 edimacs2bc
 __pycache__
-.vscode
+*.class
+.vscode/*
