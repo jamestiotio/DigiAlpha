@@ -27,8 +27,8 @@ class Graph:
                 if not visited[neighbour]:
                     self.dfs(neighbour, visited)
 
-    # Function to perform depth-first search on the graph and add to the stack
-    def dfs_stack(self, vertex, visited, stack):
+    # Function to perform depth-first search on the graph and add to the main stack
+    def dfs_stack(self, vertex, visited, main_stack):
         # Base case: mark the current vertex as visited
         visited[vertex] = True
 
@@ -36,10 +36,10 @@ class Graph:
         for neighbour in self.G.get(vertex, []):
             if not visited[neighbour]:
                 # Recursive case: mark all of the vertices adjacent to the specified vertex as visited
-                self.dfs_stack(neighbour, visited, stack)
+                self.dfs_stack(neighbour, visited, main_stack)
 
-        # Add the current vertex to the stack
-        stack.append(vertex)
+        # Add the current vertex to the main stack
+        main_stack.append(vertex)
 
     # Function to get the transpose/reverse of the graph (this is unique for Kosaraju's algorithm)
     def transpose(self):
@@ -55,21 +55,21 @@ class Graph:
 
     # Function to return all of the strongly-connected components of the graph
     def return_all_scc(self):
-        stack = []
+        main_stack = []
         visited = [False] * self.V  # Initialize all of the values with False, since we have not visited any nodes yet
 
-        # Add vertices to the stack in reverse topological order (according to their finishing times)
+        # Add vertices to the main stack in reverse topological order (according to their finishing times)
         for vertex in range(0, self.V):
             if not visited[vertex]:
-                self.dfs_stack(vertex, visited, stack)
+                self.dfs_stack(vertex, visited, main_stack)
 
         g_transposed = self.transpose()  # Create the transpose of the graph
 
         visited = [False] * self.V  # Mark all the vertices as not visited again to prepare for our second round of DFS
 
-        # Process all the vertices in the order defined by the stack
-        while stack:
-            vertex = stack.pop()
+        # Process all the vertices in the order defined by the main stack
+        while main_stack:
+            vertex = main_stack.pop()
 
             if not visited[vertex]:
                 g_transposed.dfs(vertex, visited)
@@ -93,7 +93,7 @@ class Kosaraju:
         for vertex in range(1, int(vertices) + 1):
             self.vertices_list.append(vertex)
             self.vertices_list.append(-vertex)
-        
+
         # Build map
         for vertex in self.vertices_list:
             self.map[vertex] = self.value
@@ -107,9 +107,9 @@ class Kosaraju:
             if len(clause) != 2:
                 continue
 
-            self.graph.add_edge(self.map[-int(clause[0])], self.map[int(clause[1])])
-            self.graph.add_edge(self.map[-int(clause[1])], self.map[int(clause[0])])
-        
+            self.graph.add_edge(self.map[-int(clause[0])], self.map[int(clause[1])])  # Add edge ¬A -> B for A ∨ B
+            self.graph.add_edge(self.map[-int(clause[1])], self.map[int(clause[0])])  # Add edge ¬B -> A for A ∨ B
+
         self.list_of_scc = self.graph.return_all_scc()  # Find all strongly-connected components
 
         for list_scc in self.list_of_scc:
@@ -131,9 +131,9 @@ class Kosaraju:
             output = ""
             for element in self.largest_scc:
                 if element < 0:
-                    output += "0"
-                elif element > 0:
                     output += "1"
+                elif element > 0:
+                    output += "0"
                 
                 output += " "
             

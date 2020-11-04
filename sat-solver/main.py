@@ -29,6 +29,7 @@ if __name__ == "__main__":
                         variables_list.append(abs(int(var)))
 
 # First implementation: Kosaraju's algorithm (6000 clauses seem to cause stack overflow)
+# Improvement point would be to use an iterative DFS
 # sys.setrecursionlimit(8000)
 start = time.time()
 kosaraju = Kosaraju(NO_OF_VARIABLES, output_list)
