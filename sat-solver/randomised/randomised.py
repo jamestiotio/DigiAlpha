@@ -20,9 +20,11 @@ def random_walk(formula, variable_list):
             assignment[abs(int(chosen_var))] = not assignment[abs(int(chosen_var))]
 
         else:
-            return True
+            outlist = [int(i) for i in list(assignment.values())]
+            outstr = " ".join(list(map(str,outlist)))
+            return "SATISFIABLE" + "\n" + outstr
 
-    return False
+    return "UNSATISFIABLE"
 
 
 def set_assignment(formula, assignment):
