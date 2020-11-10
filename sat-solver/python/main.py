@@ -7,7 +7,7 @@ from dfs.kosaraju import Kosaraju
 if __name__ == "__main__":
     NO_OF_VARIABLES = 0
 
-    filename = os.path.abspath("cnf/example.cnf")
+    filename = os.path.abspath("../cnf/example.cnf")
     output_list = []
     variables_list = []
 
