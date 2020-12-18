@@ -23,7 +23,7 @@ public class TarjanSolver {
      * 
      * @param formula
      * @param numOfVars
-     * @return
+     * @return the integer array which contains the result for all vertices.
      */
     public static int[] solve(ArrayList<ArrayList<Integer>> formula, int numOfVars) {
         // Form definite size for each attribute
@@ -31,7 +31,7 @@ public class TarjanSolver {
         definedIndex = new int[varNum];
         prevIndex = new int[varNum];
         graph = new ArrayList[varNum];
-        answer = new int [varNum];
+        answer = new int[varNum];
         scc = new ArrayList[varNum];
 
         // Create the associated graph from the formula
@@ -91,7 +91,7 @@ public class TarjanSolver {
      * If one literal is false, the other must be true for the clause to be true.
      * For this solver, instead of using the built-in Formula class, a nested ArrayList is given.
      * 
-     * @param formula Nested ArrayList of variables.
+     * @param formula, the nested ArrayList of variables.
      */
     public static void createGraph(ArrayList<ArrayList<Integer>> formula) {
         int first, second, negatedFirst, negatedSecond;
