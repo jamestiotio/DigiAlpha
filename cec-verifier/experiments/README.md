@@ -1,6 +1,6 @@
 # Additional Experiments
 
-During the 2D week, I was occupied with the Optimized 32-Bit Full Adder component. Thus, I took the liberty of experimenting with other possible implementations of the CEC Verifier which are faster and more optimized. This subfolder contains the results of such experiments.
+During the 2D week, I was occupied with the Optimized 32-Bit Full Adder component. Thus, since I have some free time now, I took the liberty of experimenting with other possible implementations of the CEC Verifier which are faster and more optimized. This subfolder contains the results of such experiments.
 
 Please do take note that results might vary between different hardware. In contrast to the relatively more stable timing analysis of JSim for the 50.002 component, Java's timing analysis for 50.001 might have quite a larger range of variance and fluctuations (even after considering the average). As such, a common benchmarking hardware would be required for a fair comparison.
 
