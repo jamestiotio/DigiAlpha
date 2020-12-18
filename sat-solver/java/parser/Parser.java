@@ -28,12 +28,13 @@ public class Parser {
             if (Tarjan.satisfiable(g)) {
                 System.out.println("SATISFIABLE");
 
+                // TODO: For larger CNFs, there might be a slight offset error on the total size for some reason (need to check logic or math further).
                 HashMap<Integer, Boolean> solution = Tarjan.solve(g);
 
                 for (int i = 1; i <= solution.size(); i++) {
                     Boolean value = solution.get(i);
 
-                    if (value) {
+                    if (Boolean.TRUE.equals(value)) {
                         System.out.print('1');
                     } else {
                         System.out.print('0');
