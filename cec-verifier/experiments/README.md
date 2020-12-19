@@ -10,7 +10,7 @@ Please do take note that results might vary between different hardware. In contr
 
 More experiments that take advantage of dynamic programming for the recursive DPLL algorithm, multithreading (using `ExecutorService`, `CountDownLatch`, `ThreadPoolExecutor` or `ForkJoinPool`) and asynchronicity to run atomic operations could also be conducted and tested in the future.
 
-> Hypothesis: synchronized methods for the sake of correctness of the final result (which is important for our case) might slow down the overall runtime instead. Further tests are necessary to reach a reasonable conclusion.
+> Hypothesis: synchronized methods attached to specific objects as locks to prevent deadlocks, race conditions or `ConcurrentModificationException` for the sake of correctness of the final result (which is important for our case) might slow down the overall runtime instead. Further tests are necessary to reach a reasonable conclusion.
 
 ## Benchmarking
 
