@@ -10,6 +10,8 @@ Please do take note that results might vary between different hardware. In contr
 
 More experiments that take advantage of dynamic programming for the recursive DPLL algorithm, multithreading (using `ExecutorService`, `CountDownLatch`, `ThreadPoolExecutor` or `ForkJoinPool`) and asynchronicity to run atomic operations could also be conducted and tested in the future.
 
+> Hypothesis: synchronized methods for the sake of correctness of the final result (which is important for our case) might slow down the overall runtime instead. Further tests are necessary to reach a reasonable conclusion.
+
 ## Benchmarking
 
 For our original code under the `cec-verifier/src` folder, these are the benchmarking results that I have obtained (which are different from the ones presented in our report):
