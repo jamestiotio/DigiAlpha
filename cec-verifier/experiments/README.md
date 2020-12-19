@@ -8,7 +8,7 @@ Please do take note that results might vary between different hardware. In contr
 >
 > Additionally, to pass the console output (including error messages) to a file for additional debugging and inspection capabilities, this option can be specified: `java <filename/classname> > output.txt 2>&1`. For `jar` files, add the `-jar` flag.
 
-More experiments that take advantage of multithreading (using `ExecutorService`, `CountDownLatch`, `ThreadPoolExecutor` or `ForkJoinPool`) and asynchronicity to run atomic operations could also be conducted and tested in the future.
+More experiments that take advantage of dynamic programming for the recursive DPLL algorithm, multithreading (using `ExecutorService`, `CountDownLatch`, `ThreadPoolExecutor` or `ForkJoinPool`) and asynchronicity to run atomic operations could also be conducted and tested in the future.
 
 ## Benchmarking
 

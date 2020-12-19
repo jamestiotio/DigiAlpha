@@ -24,10 +24,10 @@ public class DPLLSolver {
 
         Clause smallest = clauses.first();
 
-        for (Clause C : clauses.rest()) {
-            if (C.isEmpty()) return null;
+        for (Clause c : clauses.rest()) {
+            if (c.isEmpty()) return null;
 
-            if (smallest.size() > C.size()) smallest = C;
+            if (smallest.size() > c.size()) smallest = c;
 
             if (smallest.isUnit()) break;
         }
@@ -86,7 +86,6 @@ public class DPLLSolver {
 
                 newClauses = newClauses.remove(c);
             }
-
         }
 
         return newClauses;
