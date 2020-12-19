@@ -82,7 +82,7 @@ public class TarjanSolver {
     }
 
     /**
-     * Given a forumla in the form of nested ArrayLists, create the adjacency list representation of vertices (directed graph).
+     * Given a formula in the form of nested ArrayLists, create the adjacency list representation of vertices (directed graph).
      * The formula given is in Conjunctive Normal Form, where each clause can have at most 2 literals.
      * To convert it into an adjacency list of vertices, each clause is converted into 2 implication statements.
      * For example: (a v ~b) becomes (~a -> ~b) and (b -> a).
