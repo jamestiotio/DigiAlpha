@@ -1,13 +1,22 @@
 import os
 import sys
 import time
+import argparse
 from randomised.randomised import random_walk
 from dfs.kosaraju import Kosaraju
 
 if __name__ == "__main__":
     NO_OF_VARIABLES = 0
 
-    filename = os.path.abspath("../cnf/example.cnf")
+    parser = argparse.ArgumentParser(prog="main.py", usage='python %(prog)s [options] path', description="Parse the specified CNF file based on the input directory/file path that consists of the boolean satisfiability assignment (SAT) problem to be solved.")
+    parser.add_argument('Filepath', metavar='path', type=str, help='the path to the CNF file to be parsed')
+    args = parser.parse_args()
+    input_path = args.Filepath
+    if not os.path.isfile(os.path.abspath(input_path)):
+        print('The file specified by the path does not exist! Quitting...')
+        sys.exit()
+
+    filename = os.path.abspath(input_path)
     output_list = []
     variables_list = []
 
