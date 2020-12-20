@@ -12,11 +12,11 @@ if __name__ == "__main__":
     parser.add_argument('Filepath', metavar='path', type=str, help='the path to the CNF file to be parsed')
     args = parser.parse_args()
     input_path = args.Filepath
-    if not os.path.isfile(os.path.abspath(input_path)):
+    filename = os.path.abspath(input_path)
+    if not os.path.isfile(filename):
         print('The file specified by the path does not exist! Quitting...')
         sys.exit()
 
-    filename = os.path.abspath(input_path)
     output_list = []
     variables_list = []
 
